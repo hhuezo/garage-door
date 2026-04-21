@@ -150,7 +150,7 @@
 <main>
 <section class="relative min-h-[600px] flex items-center overflow-hidden bg-primary">
 <div class="absolute inset-0 z-0">
-<img alt="Professional garage door technician" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqdfwUqi8SqjPSf2uKRLb8oX6xUMd0IUAAjiI2sgXZliqo7Xd6m--M8zTRbJYUEcITU6ohY9DVyTkKOICVsRwiMNhI-SzyS0jGNL0GomlWeLUhaZlhibFdlucGywhXj5Puy_gSVNMEzpXt_eP0DD1Kkld2S1IPPNIc2KVVT2KWKeEKL1906hMa26Si3P6CzquA3xuLSC_9rksxiY09zKVhyYtNm7a58NfZMNYxR_BTUfifAnc1WgtlLjMadmHrQhPWk_1LvFyMcP-r"/>
+<img alt="Professional garage door technician" class="w-full h-full object-cover" src="{{ asset('images/lifting-gates-garage.jpg') }}"/>
 <div class="absolute inset-0 hero-overlay"></div>
 </div>
 <div class="relative z-10 max-w-7xl mx-auto px-6 w-full grid grid-cols-1 md:grid-cols-2 items-center gap-12">
@@ -174,7 +174,7 @@
 </div>
 <div class="hidden md:flex justify-end">
 <div class="relative w-80 h-96 bg-white/10 backdrop-blur-sm rounded-3xl overflow-hidden border border-white/20 p-4 shadow-2xl rotate-3 transform">
-<img alt="Technician detail" class="w-full h-full object-cover rounded-2xl" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqUmcjwtycUgc2KjiupC_bNK7jxu15WW43HGqtqe8tpEPmE3puEDIVDL4SF3ck-zGjpOyGUp6PllUI31mEFh_3yas8A2pGFsuLiMeyXzqsZJdIi70hpKcyCuB_-Mm_v1_h7VAkmoNdZHospGF-IOcrG4s37ivs3wUqt-0N__k6AsDiaRAzIXNw8gdO4G0ZvrguQSrAu3FklR04E8Kt0TCJ3rs4jkgpY4fwtxjIOnu8eWFi72N9GXXtPSe4MH1gtZg0E3xI3BU8H-3d"/>
+<img alt="Technician detail" class="w-full h-full object-cover rounded-2xl" src="{{ asset('images/instalacion-de-puertas-automaticas.jpg.webp') }}"/>
 </div>
 </div>
 </div>
@@ -188,7 +188,7 @@
 <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
 <div class="lg:col-span-5">
 <div class="relative rounded-br-[100px] overflow-hidden shadow-xl">
-<img alt="Technicians with tablet" class="w-full h-auto object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwvL8O36sPotoSsch__yj_ePQDaKSDoMeHNhvN3oc8WpxaTPu6ac7GXdeAL5cvRAQANVv2sjRHSwZz1DIu-n3GxCRL8oReTs3ZaRzm2u-dwtfjfILVAe_b7jQSLx_GKa9oOMn-k9Ze133Dx1dxm_I9EpuWwjiOT-OnDVX9ooZ9bLtJvfieYYlpvnq6RoNUAaavrLDDNNkYzm9JZx0KpR6zD-s3hmLZXv7a58n-0nNUf2yPkYVSg3aMa9TkjCYYx4XYjqUuPX2kk-_e"/>
+<img alt="Technicians with tablet" class="w-full h-auto object-cover" src="{{ asset('images/3.jpg') }}"/>
 </div>
 </div>
 <div class="lg:col-span-7 lg:pl-12 flex flex-col items-start">
@@ -229,7 +229,7 @@
 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
 <div class="bg-white rounded-[2rem] overflow-hidden flex flex-col h-full shadow-2xl relative">
 <div class="relative h-64 overflow-hidden">
-<img alt="Residential garage door" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqdfwUqi8SqjPSf2uKRLb8oX6xUMd0IUAAjiI2sgXZliqo7Xd6m--M8zTRbJYUEcITU6ohY9DVyTkKOICVsRwiMNhI-SzyS0jGNL0GomlWeLUhaZlhibFdlucGywhXj5Puy_gSVNMEzpXt_eP0DD1Kkld2S1IPPNIc2KVVT2KWKeEKL1906hMa26Si3P6CzquA3xuLSC_9rksxiY09zKVhyYtNm7a58NfZMNYxR_BTUfifAnc1WgtlLjMadmHrQhPWk_1LvFyMcP-r"/>
+<img alt="Residential garage door" class="w-full h-full object-cover" src="{{ asset('images/service1.jpg') }}"/>
 <div class="absolute bottom-0 right-0 w-20 h-20 bg-[#aec7f7] rounded-tl-[2rem] flex items-center justify-center">
 <span class="material-symbols-outlined text-primary text-4xl" data-icon="garage">garage</span>
 </div>
@@ -256,7 +256,7 @@
 </div>
 <div class="bg-white rounded-[2rem] overflow-hidden flex flex-col h-full shadow-2xl relative">
 <div class="relative h-64 overflow-hidden">
-<img alt="Garage door maintenance" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwvL8O36sPotoSsch__yj_ePQDaKSDoMeHNhvN3oc8WpxaTPu6ac7GXdeAL5cvRAQANVv2sjRHSwZz1DIu-n3GxCRL8oReTs3ZaRzm2u-dwtfjfILVAe_b7jQSLx_GKa9oOMn-k9Ze133Dx1dxm_I9EpuWwjiOT-OnDVX9ooZ9bLtJvfieYYlpvnq6RoNUAaavrLDDNNkYzm9JZx0KpR6zD-s3hmLZXv7a58n-0nNUf2yPkYVSg3aMa9TkjCYYx4XYjqUuPX2kk-_e"/>
+<img alt="Garage door maintenance" class="w-full h-full object-cover" src="{{ asset('images/service2.jpg') }}"/>
 <div class="absolute bottom-0 right-0 w-20 h-20 bg-[#aec7f7] rounded-tl-[2rem] flex items-center justify-center">
 <span class="material-symbols-outlined text-primary text-4xl" data-icon="construction">construction</span>
 </div>
@@ -283,7 +283,7 @@
 </div>
 <div class="bg-white rounded-[2rem] overflow-hidden flex flex-col h-full shadow-2xl relative">
 <div class="relative h-64 overflow-hidden">
-<img alt="Garage door repair" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqUmcjwtycUgc2KjiupC_bNK7jxu15WW43HGqtqe8tpEPmE3puEDIVDL4SF3ck-zGjpOyGUp6PllUI31mEFh_3yas8A2pGFsuLiMeyXzqsZJdIi70hpKcyCuB_-Mm_v1_h7VAkmoNdZHospGF-IOcrG4s37ivs3wUqt-0N__k6AsDiaRAzIXNw8gdO4G0ZvrguQSrAu3FklR04E8Kt0TCJ3rs4jkgpY4fwtxjIOnu8eWFi72N9GXXtPSe4MH1gtZg0E3xI3BU8H-3d"/>
+<img alt="Garage door repair" class="w-full h-full object-cover" src="{{ asset('images/service3.jpg') }}"/>
 <div class="absolute bottom-0 right-0 w-20 h-20 bg-[#aec7f7] rounded-tl-[2rem] flex items-center justify-center">
 <span class="material-symbols-outlined text-primary text-4xl" data-icon="handyman">handyman</span>
 </div>
@@ -328,7 +328,7 @@
 </div>
 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-[#1B365D] rounded-[3rem] p-4 lg:p-8">
 <div class="lg:col-span-8 h-80 lg:h-[400px] overflow-hidden rounded-[2.5rem]">
-<img alt="Our team at work" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqdfwUqi8SqjPSf2uKRLb8oX6xUMd0IUAAjiI2sgXZliqo7Xd6m--M8zTRbJYUEcITU6ohY9DVyTkKOICVsRwiMNhI-SzyS0jGNL0GomlWeLUhaZlhibFdlucGywhXj5Puy_gSVNMEzpXt_eP0DD1Kkld2S1IPPNIc2KVVT2KWKeEKL1906hMa26Si3P6CzquA3xuLSC_9rksxiY09zKVhyYtNm7a58NfZMNYxR_BTUfifAnc1WgtlLjMadmHrQhPWk_1LvFyMcP-r"/>
+<img alt="Our team at work" class="w-full h-full object-cover" src="{{ asset('images/lifting-gates-garage.jpg') }}"/>
 </div>
 <div class="lg:col-span-4 bg-white/10 backdrop-blur-md rounded-[2.5rem] p-8 flex flex-col justify-center gap-8">
 <div>
