@@ -1,159 +1,13 @@
-<!DOCTYPE html>
+@extends('menu')
 
-<html class="light" lang="en"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;700;800&amp;family=Inter:wght@300;400;600&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script id="tailwind-config">
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            "colors": {
-                    "secondary-container": "#d0e1fb",
-                    "surface-bright": "#f7f9fb",
-                    "secondary": "#505f76",
-                    "on-primary-fixed-variant": "#2e476f",
-                    "on-surface-variant": "#44474e",
-                    "on-background": "#191c1e",
-                    "on-tertiary-container": "#969eb7",
-                    "inverse-surface": "#2d3133",
-                    "inverse-on-surface": "#eff1f3",
-                    "secondary-fixed": "#d3e4fe",
-                    "on-error": "#ffffff",
-                    "on-tertiary-fixed-variant": "#3f465c",
-                    "surface-container-low": "#f2f4f6",
-                    "error-container": "#ffdad6",
-                    "primary": "#002046",
-                    "tertiary-fixed": "#dae2fd",
-                    "inverse-primary": "#aec7f7",
-                    "on-surface": "#191c1e",
-                    "surface-container-high": "#e6e8ea",
-                    "on-secondary-fixed-variant": "#38485d",
-                    "error": "#ba1a1a",
-                    "tertiary-fixed-dim": "#bec6e0",
-                    "primary-fixed-dim": "#aec7f7",
-                    "surface-container-highest": "#e0e3e5",
-                    "surface-dim": "#d8dadc",
-                    "secondary-fixed-dim": "#b7c8e1",
-                    "surface-container-lowest": "#ffffff",
-                    "surface-container": "#eceef0",
-                    "surface": "#f7f9fb",
-                    "on-primary": "#ffffff",
-                    "tertiary": "#182033",
-                    "on-error-container": "#93000a",
-                    "on-tertiary": "#ffffff",
-                    "primary-fixed": "#d6e3ff",
-                    "on-secondary-container": "#54647a",
-                    "on-primary-container": "#87a0cd",
-                    "on-secondary-fixed": "#0b1c30",
-                    "surface-variant": "#e0e3e5",
-                    "background": "#f7f9fb",
-                    "on-primary-fixed": "#001b3d",
-                    "primary-container": "#1b365d",
-                    "tertiary-container": "#2d354a",
-                    "on-secondary": "#ffffff",
-                    "surface-tint": "#465f88",
-                    "outline": "#74777f",
-                    "outline-variant": "#c4c6cf",
-                    "on-tertiary-fixed": "#131b2e"
-            },
-            "borderRadius": {
-                    "DEFAULT": "0.125rem",
-                    "lg": "0.25rem",
-                    "xl": "0.5rem",
-                    "full": "0.75rem"
-            },
-            "fontFamily": {
-                    "headline": ["Manrope"],
-                    "body": ["Inter"],
-                    "label": ["Inter"]
-            }
-          },
-        },
-      }
-    </script>
-<style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        .hero-overlay {
-            background: linear-gradient(rgba(0, 32, 70, 0.7), rgba(0, 32, 70, 0.7));
-        }
-        .house-outline-bg {
-            position: absolute;
-            right: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            opacity: 0.05;
-            z-index: 0;
-            width: 50%;
-            pointer-events: none;
-        }
-        .grid-container {
-            width: 100%;
-            padding-right: 15px;
-            padding-left: 15px;
-            margin-right: auto;
-            margin-left: auto;
-        }
-        @media (min-width: 576px) { .grid-container { max-width: 540px; } }
-        @media (min-width: 768px) { .grid-container { max-width: 720px; } }
-        @media (min-width: 992px) { .grid-container { max-width: 960px; } }
-        @media (min-width: 1200px) { .grid-container { max-width: 1140px; } }
-
-        /* Nav overlay specific styling */
-        .nav-background {
-            background-image: linear-gradient(rgba(0, 32, 70, 0.85), rgba(0, 32, 70, 0.85)), url('https://lh3.googleusercontent.com/aida-public/AB6AXuBqdfwUqi8SqjPSf2uKRLb8oX6xUMd0IUAAjiI2sgXZliqo7Xd6m--M8zTRbJYUEcITU6ohY9DVyTkKOICVsRwiMNhI-SzyS0jGNL0GomlWeLUhaZlhibFdlucGywhXj5Puy_gSVNMEzpXt_eP0DD1Kkld2S1IPPNIc2KVVT2KWKeEKL1906hMa26Si3P6CzquA3xuLSC_9rksxiY09zKVhyYtNm7a58NfZMNYxR_BTUfifAnc1WgtlLjMadmHrQhPWk_1LvFyMcP-r');
-            background-size: cover;
-            background-position: center;
-        }
-    </style>
-</head>
-<body class="bg-surface text-on-surface font-body antialiased">
-<header class="sticky top-0 w-full z-50 nav-background shadow-lg border-b border-white/10">
-<nav class="max-w-7xl mx-auto px-6 py-3">
-<div class="flex items-center justify-between">
-<!-- Left Links -->
-<div class="hidden md:flex flex-1 justify-end items-center space-x-8 mr-10">
-<a class="text-white hover:text-on-primary-container transition-colors font-headline font-bold text-xs uppercase tracking-widest" href="#">Home</a>
-<a class="text-white hover:text-on-primary-container transition-colors font-headline font-bold text-xs uppercase tracking-widest" href="#servicios">Services</a>
-<a class="text-white hover:text-on-primary-container transition-colors font-headline font-bold text-xs uppercase tracking-widest" href="#nosotros">About Us</a>
-</div>
-<!-- Centered Logo -->
-<div class="flex flex-col items-center justify-center shrink-0">
-<div class="flex items-center gap-2">
-<span class="material-symbols-outlined text-white text-3xl font-black">garage</span>
-<div class="flex flex-col leading-none">
-<span class="text-white font-headline font-black text-base uppercase tracking-tight">Twins Garage</span>
-<span class="text-white font-headline font-black text-base uppercase tracking-tight">Doors LLC</span>
-</div>
-</div>
-</div>
-<!-- Right Links -->
-<div class="hidden md:flex flex-1 justify-start items-center space-x-8 ml-10">
-<a class="text-white hover:text-on-primary-container transition-colors font-headline font-bold text-xs uppercase tracking-widest" href="#trabajo">Our Work</a>
-<a class="text-white hover:text-on-primary-container transition-colors font-headline font-bold text-xs uppercase tracking-widest" href="#contacto">Contact Us</a>
-<a class="text-white hover:text-on-primary-container transition-colors font-headline font-bold text-xs uppercase tracking-widest" href="#reviews">Reviews</a>
-</div>
-<!-- Mobile Emergency Button (Visible on mobile instead of links) -->
-<div class="md:hidden">
-<a href="tel:+14692888881" class="bg-on-primary-container text-primary px-3 py-2 rounded font-headline font-bold text-[10px] uppercase tracking-tighter inline-block">
-                    Emergency
-                </a>
-</div>
-</div>
-</nav>
-</header>
+@section('content')
 <main>
 <section class="relative min-h-[600px] flex items-center overflow-hidden bg-primary">
 <div class="absolute inset-0 z-0">
 <img alt="Professional garage door technician" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqdfwUqi8SqjPSf2uKRLb8oX6xUMd0IUAAjiI2sgXZliqo7Xd6m--M8zTRbJYUEcITU6ohY9DVyTkKOICVsRwiMNhI-SzyS0jGNL0GomlWeLUhaZlhibFdlucGywhXj5Puy_gSVNMEzpXt_eP0DD1Kkld2S1IPPNIc2KVVT2KWKeEKL1906hMa26Si3P6CzquA3xuLSC_9rksxiY09zKVhyYtNm7a58NfZMNYxR_BTUfifAnc1WgtlLjMadmHrQhPWk_1LvFyMcP-r"/>
 <div class="absolute inset-0 hero-overlay"></div>
 </div>
-<div class="relative z-10 max-w-7xl mx-auto px-6 w-full grid grid-cols-1 md:grid-cols-2 items-center gap-12">
+<div class="relative z-10 max-w-screen-2xl mx-auto px-6 w-full grid grid-cols-1 md:grid-cols-2 items-center gap-12">
 <div class="relative">
 <div class="absolute -left-8 -top-8 w-24 h-24 border-l-8 border-t-8 border-slate-400 opacity-50"></div>
 <h1 class="font-headline font-black text-4xl md:text-6xl text-white leading-tight mb-8">
@@ -184,7 +38,7 @@
 <path class="text-primary" d="M10 50L50 10L90 50V90H10V50Z" stroke="currentColor" stroke-width="2"></path>
 <rect class="text-primary" height="30" stroke="currentColor" stroke-width="2" width="40" x="30" y="60"></rect>
 </svg>
-<div class="max-w-7xl mx-auto px-6 relative z-10">
+<div class="max-w-screen-2xl mx-auto px-6 relative z-10">
 <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
 <div class="lg:col-span-5">
 <div class="relative rounded-br-[100px] overflow-hidden shadow-xl">
@@ -313,7 +167,7 @@
 </section>
 <section class="overflow-hidden" id="trabajo">
 <div class="bg-[#87A0CD] py-20 px-6">
-<div class="max-w-7xl mx-auto">
+<div class="max-w-screen-2xl mx-auto">
 <div class="mb-12">
 <h2 class="text-primary font-headline font-black text-4xl md:text-5xl leading-none uppercase">Our</h2>
 <h3 class="text-white font-headline font-black text-6xl md:text-8xl leading-none uppercase -mt-2">Work</h3>
@@ -348,7 +202,7 @@
 </div>
 </div>
 <div class="bg-white py-24 px-6 relative" id="reviews">
-<div class="max-w-7xl mx-auto">
+<div class="max-w-screen-2xl mx-auto">
 <div class="text-center mb-16">
 <h2 class="text-[#87A0CD] font-headline font-black text-4xl md:text-5xl leading-none uppercase">Our</h2>
 <h3 class="text-primary font-headline font-black text-6xl md:text-8xl leading-none uppercase -mt-2">Experience</h3>
@@ -487,19 +341,4 @@
 </div>
 </section>
 </main>
-<footer class="bg-slate-950 w-full py-12 px-6">
-<div class="flex flex-col md:flex-row justify-between items-center max-w-7xl mx-auto gap-6">
-<div class="font-headline font-black text-white uppercase tracking-widest">
-                Twins Garage Doors
-            </div>
-<div class="flex flex-wrap justify-center gap-8 font-body text-sm font-light tracking-wide text-slate-400">
-<a class="hover:text-white transition-colors" href="#">Privacy Policy</a>
-<a class="hover:text-white transition-colors" href="#">Terms of Service</a>
-<a class="hover:text-white transition-colors" href="#">Licensing</a>
-</div>
-<div class="text-slate-400 font-body text-sm font-light text-center md:text-right">
-                © {{ date('Y') }} Twins Garage Doors LLC. Protecting What Matters Most.
-            </div>
-</div>
-</footer>
-</body></html>
+@endsection
