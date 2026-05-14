@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PublicAboutUsController;
+use App\Http\Controllers\PublicOurWorkController;
 use App\Http\Controllers\PublicServicesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -15,9 +16,7 @@ Route::get('/about-us', PublicAboutUsController::class)->name('about');
 
 Route::get('/services', PublicServicesController::class)->name('services');
 
-Route::get('/our-work', function () {
-    return view('our_work');
-})->name('our_work');
+Route::get('/our-work', PublicOurWorkController::class)->name('our_work');
 
 Route::get('/contact', function () {
     return view('contact');
@@ -52,6 +51,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/pages/{id}/edit', [PageController::class, 'edit'])->name('pages.edit');
     Route::put('/pages/{id}/about-us', [PageController::class, 'updateAboutUs'])->name('pages.about-us.update');
     Route::put('/pages/{id}/services', [PageController::class, 'updateServices'])->name('pages.services.update');
+    Route::put('/pages/{id}/our-work', [PageController::class, 'updateOurWork'])->name('pages.our-work.update');
 });
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');

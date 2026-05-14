@@ -75,7 +75,7 @@
                                             <span class="text-muted small">{{ $page->updated_at?->format('d/m/Y H:i') }}</span>
                                         </td>
                                         <td class="text-center">
-                                            @if (in_array($page->slug, ['about-us', 'services'], true))
+                                            @if (in_array($page->slug, ['about-us', 'services', 'our-work'], true))
                                                 <a href="{{ route('pages.edit', $page) }}" class="btn btn-sm btn-info btn-wave"
                                                     title="Editar en el panel">
                                                     <i class="ri-edit-line"></i>
@@ -109,7 +109,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             if (typeof expandMenuAndHighlightOption === 'function') {
-                expandMenuAndHighlightOption('sitioWebMenu', 'adminPaginasListado');
+                expandMenuAndHighlightOption(null, 'adminPaginasListado');
             }
 
             if (typeof $ !== 'undefined' && $.fn.DataTable) {

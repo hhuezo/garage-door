@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 use App\Models\AboutUsCard;
 use App\Models\AboutUsContent;
+use App\Models\OurWorkContent;
+use App\Models\OurWorkProject;
 use App\Models\Page;
 use App\Models\ServicesCard;
 use App\Models\ServicesContent;
@@ -51,13 +53,37 @@ class SiteContentSeeder extends Seeder
         $this->servicesCard($servicesContent, 4, 'Seguridad y Control', 'Refuerzos de seguridad y sensores de movimiento para proteger lo que más importa en su propiedad.', 'security', 'service2.jpg', 'light');
         $this->servicesCard($servicesContent, 5, 'Soluciones Comerciales', 'Puertas de alto tráfico y gran escala para almacenes, naves industriales y centros comerciales.', 'factory', 'service3.jpg', 'light');
 
+        $ourWorkPage = Page::query()->where('slug', 'our-work')->firstOrFail();
+        $ourWorkContent = OurWorkContent::query()->create([
+            'page_id' => $ourWorkPage->id,
+            'hero_title_primary' => 'Our',
+            'hero_title_accent' => 'Work',
+            'hero_icon' => 'tune',
+            'hero_intro' => 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat.',
+            'hero_cta_label' => 'Leer más',
+            'hero_cta_url' => '/#contacto',
+            'hero_main_image_filename' => 'lifting-gates-garage.jpg',
+            'hero_inset_image_filename' => 'service2.jpg',
+            'stat_value' => '+100',
+            'stat_caption' => 'Proyectos en DFW',
+        ]);
+
+        $this->ourWorkProject($ourWorkContent, 0, 'Instalación residencial', 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt', 'home', 'service1.jpg');
+        $this->ourWorkProject($ourWorkContent, 1, 'Puerta seccional', 'Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip', 'garage', 'service2.jpg');
+        $this->ourWorkProject($ourWorkContent, 2, 'Comercial', 'Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat', 'warehouse', 'service3.jpg');
+        $this->ourWorkProject($ourWorkContent, 3, 'Modernización', 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt', 'engineering', 'service1.jpg');
+        $this->ourWorkProject($ourWorkContent, 4, 'Mantenimiento', 'Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl', 'handyman', 'service2.jpg');
+        $this->ourWorkProject($ourWorkContent, 5, 'Control de acceso', 'Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat', 'security', 'service3.jpg');
+
         $this->logLine(sprintf(
-            'SiteContentSeeder OK. pages=%d, about_us_contents=%d, about_us_cards=%d, services_contents=%d, services_cards=%d.',
+            'SiteContentSeeder OK. pages=%d, about_us_contents=%d, about_us_cards=%d, services_contents=%d, services_cards=%d, our_work_contents=%d, our_work_projects=%d.',
             DB::table('pages')->count(),
             DB::table('about_us_contents')->count(),
             DB::table('about_us_cards')->count(),
             DB::table('services_contents')->count(),
             DB::table('services_cards')->count(),
+            Schema::hasTable('our_work_contents') ? DB::table('our_work_contents')->count() : 0,
+            Schema::hasTable('our_work_projects') ? DB::table('our_work_projects')->count() : 0,
         ));
     }
 
@@ -75,6 +101,8 @@ class SiteContentSeeder extends Seeder
         $tAboutContents = "`{$p}about_us_contents`";
         $tServCards = "`{$p}services_cards`";
         $tServContents = "`{$p}services_contents`";
+        $tOurWorkProjects = "`{$p}our_work_projects`";
+        $tOurWorkContents = "`{$p}our_work_contents`";
         $tPages = "`{$p}pages`";
 
         $driver = Schema::getConnection()->getDriverName();
@@ -84,6 +112,12 @@ class SiteContentSeeder extends Seeder
             try {
                 DB::unprepared("TRUNCATE TABLE {$tAboutCards}");
                 DB::unprepared("TRUNCATE TABLE {$tAboutContents}");
+                if (Schema::hasTable('our_work_projects')) {
+                    DB::unprepared("TRUNCATE TABLE {$tOurWorkProjects}");
+                }
+                if (Schema::hasTable('our_work_contents')) {
+                    DB::unprepared("TRUNCATE TABLE {$tOurWorkContents}");
+                }
                 if (Schema::hasTable('services_cards')) {
                     DB::unprepared("TRUNCATE TABLE {$tServCards}");
                 }
@@ -97,6 +131,12 @@ class SiteContentSeeder extends Seeder
         } elseif ($driver === 'sqlite') {
             Schema::disableForeignKeyConstraints();
             try {
+                if (Schema::hasTable('our_work_projects')) {
+                    DB::table('our_work_projects')->delete();
+                }
+                if (Schema::hasTable('our_work_contents')) {
+                    DB::table('our_work_contents')->delete();
+                }
                 if (Schema::hasTable('services_cards')) {
                     DB::table('services_cards')->delete();
                 }
@@ -112,6 +152,12 @@ class SiteContentSeeder extends Seeder
         } else {
             Schema::disableForeignKeyConstraints();
             try {
+                if (Schema::hasTable('our_work_projects')) {
+                    DB::table('our_work_projects')->truncate();
+                }
+                if (Schema::hasTable('our_work_contents')) {
+                    DB::table('our_work_contents')->truncate();
+                }
                 if (Schema::hasTable('services_cards')) {
                     DB::table('services_cards')->truncate();
                 }
@@ -126,7 +172,7 @@ class SiteContentSeeder extends Seeder
             }
         }
 
-        $this->logLine('Truncadas tablas: about_us_*, services_*, pages.');
+        $this->logLine('Truncadas tablas: about_us_*, our_work_*, services_*, pages.');
     }
 
     /**
@@ -222,6 +268,20 @@ class SiteContentSeeder extends Seeder
             'icon' => $icon,
             'image_path' => $imagePath,
             'theme' => $theme,
+        ]);
+    }
+
+    private function ourWorkProject(OurWorkContent $content, int $order, string $title, string $body, string $icon, string $imagePath): void
+    {
+        OurWorkProject::query()->create([
+            'our_work_content_id' => $content->id,
+            'sort_order' => $order,
+            'title' => $title,
+            'body' => $body,
+            'icon' => $icon,
+            'image_path' => $imagePath,
+            'link_label' => 'Leer más',
+            'link_url' => '/#contacto',
         ]);
     }
 }

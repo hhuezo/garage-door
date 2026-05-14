@@ -26,9 +26,20 @@
 
     <style>
         .has-sub.is-expanded .slide-menu { display: block; }
-        .side-menu__item.active {
-            background-color: #f0f0f0;
-            font-weight: bold;
+        /* Opción actual del panel: solo texto en negrita, sin bloque de fondo */
+        body .app-sidebar .side-menu__item.active {
+            background-color: transparent !important;
+            background: transparent !important;
+            font-weight: inherit !important;
+        }
+        body .app-sidebar .side-menu__item.active .side-menu__icon {
+            font-weight: inherit;
+        }
+        body .app-sidebar .admin-sidebar-menu-em {
+            font-weight: 400;
+        }
+        body .app-sidebar .side-menu__item.active .admin-sidebar-menu-em {
+            font-weight: 700;
         }
         .switch { position: relative; display: inline-block; width: 40px; height: 20px; }
         .switch input { opacity: 0; width: 0; height: 0; }
@@ -148,27 +159,14 @@
                         </svg>
                     </div>
                     <ul class="main-menu">
-                        <li class="slide has-sub" id="sitioWebMenu">
-                            <a href="javascript:void(0);" class="side-menu__item">
+                        <li class="slide">
+                            <a href="{{ route('pages.index') }}" id="adminPaginasListado" class="side-menu__item">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 side-menu__icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round"
                                         d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .857-.11 1.688-.314 2.473M6.157 6.157A8.959 8.959 0 003 12c0 .857.11 1.688.314 2.473" />
                                 </svg>
-                                <span class="side-menu__label">Contenido del sitio</span>
-                                <i class="ri-arrow-down-s-line side-menu__angle"></i>
+                                <span class="side-menu__label"><strong class="admin-sidebar-menu-em">Contenido del sitio</strong></span>
                             </a>
-                            <ul class="slide-menu child1">
-                                <li class="slide side-menu__label1">
-                                    <a href="javascript:void(0);">Páginas y bloques</a>
-                                </li>
-                                <li class="slide">
-                                    <a href="{{ route('pages.index') }}" id="adminPaginasListado" class="side-menu__item">Listado de páginas</a>
-                                    <a href="javascript:void(0);" id="adminPaginasSecciones" class="side-menu__item">Secciones</a>
-                                    <a href="javascript:void(0);" id="adminPaginasItems" class="side-menu__item">Tarjetas e ítems</a>
-                                    <a href="javascript:void(0);" id="adminPaginasMedios" class="side-menu__item">Archivos multimedia</a>
-                                    <a href="javascript:void(0);" id="adminPaginasSnippets" class="side-menu__item">Textos (snippets)</a>
-                                </li>
-                            </ul>
                         </li>
                         <li class="slide">
                             <a href="{{ url('/') }}" target="_blank" rel="noopener" class="side-menu__item">
@@ -314,9 +312,11 @@
         }
         function expandMenuAndHighlightOption(menuId, optionId) {
             resetMenuSelection();
-            const menuElement = document.getElementById(menuId);
+            if (menuId) {
+                const menuElement = document.getElementById(menuId);
+                if (menuElement) menuElement.classList.add('is-expanded');
+            }
             const optionElement = document.getElementById(optionId);
-            if (menuElement) menuElement.classList.add('is-expanded');
             if (optionElement) optionElement.classList.add('active');
         }
         @auth

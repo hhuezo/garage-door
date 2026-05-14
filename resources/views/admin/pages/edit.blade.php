@@ -5,12 +5,14 @@
 @php
     $isAbout = $page->slug === 'about-us';
     $isServices = $page->slug === 'services';
+    $isOurWork = $page->slug === 'our-work';
+    $isCmsMaterialIcons = $isAbout || $isServices || $isOurWork;
 @endphp
 
 @push('styles')
     <link href="{{ asset('assets/libs/toast/toastr.min.css') }}" rel="stylesheet">
     @include('layouts.partials.cms_site_visual_assets', ['tailwindImportant' => '.cms-editor-preview-shell'])
-    @if ($isAbout || $isServices)
+    @if ($isCmsMaterialIcons)
         <link href="{{ asset('assets/libs/select2/select2.min.css') }}" rel="stylesheet">
     @endif
     <style>
@@ -75,7 +77,7 @@
         body .offcanvas.cms-page-offcanvas .form-group {
             margin-bottom: 1rem;
         }
-        @if ($isAbout || $isServices)
+        @if ($isCmsMaterialIcons)
         .select2-container--open,
         .select2-dropdown {
             z-index: 10060 !important;
@@ -143,6 +145,10 @@
         <div class="alert alert-warning">No hay registro en <code>services_contents</code> para Servicios. Ejecuta migraciones y <code>php artisan db:seed --class=SiteContentSeeder</code>.</div>
     @endif
 
+    @if ($isOurWork && ! $page->ourWorkContent)
+        <div class="alert alert-warning">No hay registro en <code>our_work_contents</code> para Our Work. Ejecuta migraciones y <code>php artisan db:seed --class=SiteContentSeeder</code>.</div>
+    @endif
+
     @if ($isAbout)
         <form method="post" action="{{ route('pages.about-us.update', $page) }}" id="form-about-us" enctype="multipart/form-data">
             @csrf
@@ -150,6 +156,11 @@
         </form>
     @elseif ($isServices)
         <form method="post" action="{{ route('pages.services.update', $page) }}" id="form-services" enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
+        </form>
+    @elseif ($isOurWork)
+        <form method="post" action="{{ route('pages.our-work.update', $page) }}" id="form-our-work" enctype="multipart/form-data">
             @csrf
             @method('PUT')
         </form>
@@ -162,6 +173,10 @@
             ])
         @elseif ($isServices)
             @include('admin.pages.editor.services_edit', [
+                'page' => $page,
+            ])
+        @elseif ($isOurWork)
+            @include('admin.pages.editor.our_work_edit', [
                 'page' => $page,
             ])
         @endif
@@ -186,20 +201,30 @@
             ])
         @endforeach
     @endif
+
+    @if ($isOurWork && $page->ourWorkContent && $page->ourWorkContent->projects->isNotEmpty())
+        @foreach ($page->ourWorkContent->projects as $project)
+            @include('admin.pages.editor.drawers.our_work_project_drawer_offcanvas', [
+                'project' => $project,
+                'formId' => 'form-our-work',
+                'positionLabel' => $loop->iteration,
+            ])
+        @endforeach
+    @endif
 @endsection
 
 @push('scripts')
     <script src="{{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
     <script src="{{ asset('assets/libs/toast/toastr.min.js') }}"></script>
-    @if ($isAbout || $isServices)
+    @if ($isCmsMaterialIcons)
         <script src="{{ asset('assets/libs/select2/select2.min.js') }}"></script>
     @endif
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             if (typeof expandMenuAndHighlightOption === 'function') {
-                expandMenuAndHighlightOption('sitioWebMenu', 'adminPaginasListado');
+                expandMenuAndHighlightOption(null, 'adminPaginasListado');
             }
-            @if ($isAbout || $isServices)
+            @if ($isCmsMaterialIcons)
             (function() {
                 if (typeof jQuery === 'undefined' || !jQuery.fn.select2) {
                     return;

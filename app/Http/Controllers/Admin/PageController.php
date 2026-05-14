@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\AboutUsCard;
 use App\Models\AboutUsContent;
+use App\Models\OurWorkContent;
+use App\Models\OurWorkProject;
 use App\Models\Page;
 use App\Models\ServicesCard;
 use App\Models\ServicesContent;
@@ -28,6 +30,14 @@ class PageController extends Controller
 
     /** Prefijo de archivos de imagen de tarjeta Servicios subidos por el CMS (solo esos se borran al reemplazar o quitar). */
     private const SERVICES_CARD_UPLOAD_PREFIX = 'services-card-';
+
+    private const OUR_WORK_SECTION_IMAGES_DIR = 'our_work';
+
+    private const OUR_WORK_PROJECT_UPLOAD_PREFIX = 'our-work-project-';
+
+    private const OUR_WORK_HERO_MAIN_PREFIX = 'our-work-hero-main-';
+
+    private const OUR_WORK_HERO_INSET_PREFIX = 'our-work-hero-inset-';
 
     public function index(): View
     {
@@ -54,6 +64,14 @@ class PageController extends Controller
 
         if ($page->slug === 'services') {
             $page->load(['servicesContent.cards']);
+
+            return view('admin.pages.edit', [
+                'page' => $page,
+            ]);
+        }
+
+        if ($page->slug === 'our-work') {
+            $page->load(['ourWorkContent.projects']);
 
             return view('admin.pages.edit', [
                 'page' => $page,
@@ -339,6 +357,180 @@ class PageController extends Controller
         return redirect()
             ->route('pages.edit', ['id' => $page->id])
             ->with('success', 'Contenido Servicios guardado. Recarga el sitio público si hace falta.');
+    }
+
+    public function updateOurWork(Request $request, int $id): RedirectResponse
+    {
+        $page = Page::query()->findOrFail($id);
+        if ($page->slug !== 'our-work') {
+            abort(404);
+        }
+
+        $request->validate([
+            'our_work_content' => ['nullable', 'array'],
+            'our_work_content.hero_title_primary' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'our_work_content.hero_title_accent' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'our_work_content.hero_icon' => ['sometimes', 'nullable', 'string', 'max:64', Rule::in(array_keys(MaterialIconOptions::serviceCardIcons()))],
+            'our_work_content.hero_intro' => ['sometimes', 'nullable', 'string', 'max:65535'],
+            'our_work_content.hero_cta_label' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'our_work_content.hero_cta_url' => ['sometimes', 'nullable', 'string', 'max:512'],
+            'our_work_content.stat_value' => ['sometimes', 'nullable', 'string', 'max:64'],
+            'our_work_content.stat_caption' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'our_work_hero_main_image' => ['nullable', 'image', 'max:8192'],
+            'our_work_hero_inset_image' => ['nullable', 'image', 'max:8192'],
+            'our_work_remove_hero_main_image' => ['sometimes', 'boolean'],
+            'our_work_remove_hero_inset_image' => ['sometimes', 'boolean'],
+            'our_work_projects' => ['nullable', 'array'],
+            'our_work_projects.*' => ['nullable', 'array'],
+            'our_work_projects.*.title' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'our_work_projects.*.body' => ['sometimes', 'nullable', 'string', 'max:65535'],
+            'our_work_projects.*.icon' => ['sometimes', 'nullable', 'string', 'max:64', Rule::in(array_keys(MaterialIconOptions::serviceCardIcons()))],
+            'our_work_projects.*.link_label' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'our_work_projects.*.link_url' => ['sometimes', 'nullable', 'string', 'max:512'],
+            'our_work_project_images' => ['nullable', 'array'],
+            'our_work_project_images.*' => ['nullable', 'image', 'max:8192'],
+            'our_work_project_remove' => ['nullable', 'array'],
+            'our_work_project_remove.*' => ['sometimes', 'boolean'],
+        ]);
+
+        DB::transaction(function () use ($request, $page) {
+            $content = OurWorkContent::query()->firstOrCreate(
+                ['page_id' => $page->id],
+                [
+                    'hero_title_primary' => 'Our',
+                    'hero_title_accent' => 'Work',
+                    'hero_intro' => '',
+                ]
+            );
+
+            $incoming = $request->input('our_work_content');
+            if (is_array($incoming)) {
+                foreach (['hero_title_primary', 'hero_title_accent', 'hero_intro', 'hero_cta_label', 'hero_cta_url', 'stat_value', 'stat_caption'] as $field) {
+                    if (array_key_exists($field, $incoming)) {
+                        $content->{$field} = $incoming[$field];
+                    }
+                }
+                if (array_key_exists('hero_icon', $incoming)) {
+                    $pick = $incoming['hero_icon'];
+                    $content->hero_icon = (is_string($pick) && $pick !== '') ? $pick : null;
+                }
+            }
+
+            if ($request->boolean('our_work_remove_hero_main_image')) {
+                $this->deleteAboutManagedUpload($content->hero_main_image_filename, self::OUR_WORK_HERO_MAIN_PREFIX);
+                $content->hero_main_image_filename = null;
+            }
+
+            if ($request->hasFile('our_work_hero_main_image')) {
+                $file = $request->file('our_work_hero_main_image');
+                if (! $file instanceof UploadedFile || ! $file->isValid()) {
+                    throw ValidationException::withMessages([
+                        'our_work_hero_main_image' => ['No se pudo subir la imagen principal del hero.'],
+                    ]);
+                }
+                $this->deleteAboutManagedUpload($content->hero_main_image_filename, self::OUR_WORK_HERO_MAIN_PREFIX);
+                $content->hero_main_image_filename = $this->storeAboutUploadInPublicImages(
+                    $file,
+                    self::OUR_WORK_HERO_MAIN_PREFIX,
+                    ['jpg', 'jpeg', 'png', 'gif', 'webp'],
+                    'our_work_hero_main_image',
+                    self::OUR_WORK_SECTION_IMAGES_DIR
+                );
+            }
+
+            if ($request->boolean('our_work_remove_hero_inset_image')) {
+                $this->deleteAboutManagedUpload($content->hero_inset_image_filename, self::OUR_WORK_HERO_INSET_PREFIX);
+                $content->hero_inset_image_filename = null;
+            }
+
+            if ($request->hasFile('our_work_hero_inset_image')) {
+                $file = $request->file('our_work_hero_inset_image');
+                if (! $file instanceof UploadedFile || ! $file->isValid()) {
+                    throw ValidationException::withMessages([
+                        'our_work_hero_inset_image' => ['No se pudo subir la imagen secundaria del hero.'],
+                    ]);
+                }
+                $this->deleteAboutManagedUpload($content->hero_inset_image_filename, self::OUR_WORK_HERO_INSET_PREFIX);
+                $content->hero_inset_image_filename = $this->storeAboutUploadInPublicImages(
+                    $file,
+                    self::OUR_WORK_HERO_INSET_PREFIX,
+                    ['jpg', 'jpeg', 'png', 'gif', 'webp'],
+                    'our_work_hero_inset_image',
+                    self::OUR_WORK_SECTION_IMAGES_DIR
+                );
+            }
+
+            $allowedProjectIds = $content->projects()->pluck('id')->all();
+            foreach ($request->input('our_work_projects', []) as $projectId => $fields) {
+                $projectId = (int) $projectId;
+                if (! in_array($projectId, $allowedProjectIds, true) || ! is_array($fields)) {
+                    continue;
+                }
+                $project = OurWorkProject::query()
+                    ->where('id', $projectId)
+                    ->where('our_work_content_id', $content->id)
+                    ->first();
+                if (! $project) {
+                    continue;
+                }
+                if (! array_key_exists('title', $fields) && ! array_key_exists('body', $fields) && ! array_key_exists('icon', $fields) && ! array_key_exists('link_label', $fields) && ! array_key_exists('link_url', $fields)) {
+                    continue;
+                }
+                $iconRaw = $fields['icon'] ?? null;
+                $icon = array_key_exists('icon', $fields)
+                    ? ((is_string($iconRaw) && $iconRaw !== '') ? $iconRaw : null)
+                    : $project->icon;
+                $project->update([
+                    'title' => array_key_exists('title', $fields) ? $fields['title'] : $project->title,
+                    'body' => array_key_exists('body', $fields) ? $fields['body'] : $project->body,
+                    'icon' => $icon,
+                    'link_label' => array_key_exists('link_label', $fields) ? $fields['link_label'] : $project->link_label,
+                    'link_url' => array_key_exists('link_url', $fields) ? $fields['link_url'] : $project->link_url,
+                ]);
+            }
+
+            foreach ($allowedProjectIds as $projectId) {
+                $project = OurWorkProject::query()
+                    ->where('id', $projectId)
+                    ->where('our_work_content_id', $content->id)
+                    ->first();
+                if (! $project) {
+                    continue;
+                }
+                if ($request->boolean('our_work_project_remove.'.$projectId)) {
+                    $this->deleteAboutManagedUpload($project->image_path, self::OUR_WORK_PROJECT_UPLOAD_PREFIX);
+                    $project->image_path = null;
+                    $project->save();
+
+                    continue;
+                }
+                if ($request->hasFile('our_work_project_images.'.$projectId)) {
+                    $file = $request->file('our_work_project_images.'.$projectId);
+                    if (! $file instanceof UploadedFile || ! $file->isValid()) {
+                        throw ValidationException::withMessages([
+                            'our_work_project_images.'.$projectId => ['No se pudo subir la imagen del proyecto.'],
+                        ]);
+                    }
+                    $this->deleteAboutManagedUpload($project->image_path, self::OUR_WORK_PROJECT_UPLOAD_PREFIX);
+                    $project->image_path = $this->storeAboutUploadInPublicImages(
+                        $file,
+                        self::OUR_WORK_PROJECT_UPLOAD_PREFIX,
+                        ['jpg', 'jpeg', 'png', 'gif', 'webp'],
+                        'our_work_project_images.'.$projectId,
+                        self::OUR_WORK_SECTION_IMAGES_DIR
+                    );
+                    $project->save();
+                }
+            }
+
+            $content->save();
+
+            $page->touch();
+        });
+
+        return redirect()
+            ->route('pages.edit', ['id' => $page->id])
+            ->with('success', 'Contenido Our Work guardado. Recarga el sitio público si hace falta.');
     }
 
     private function deleteAboutManagedUpload(?string $filename, string $prefix): void
