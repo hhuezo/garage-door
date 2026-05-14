@@ -33,43 +33,6 @@
 </div>
 </div>
 </section>
-<section class="py-24 bg-[#f2f4f6] relative overflow-hidden" id="nosotros">
-<svg class="house-outline-bg" fill="none" viewbox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-<path class="text-primary" d="M10 50L50 10L90 50V90H10V50Z" stroke="currentColor" stroke-width="2"></path>
-<rect class="text-primary" height="30" stroke="currentColor" stroke-width="2" width="40" x="30" y="60"></rect>
-</svg>
-<div class="max-w-screen-2xl mx-auto px-6 relative z-10">
-<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-<div class="lg:col-span-5">
-<div class="relative rounded-br-[100px] overflow-hidden shadow-xl">
-<img alt="Technicians with tablet" class="w-full h-auto object-cover" src="{{ asset('images/3.jpg') }}"/>
-</div>
-</div>
-<div class="lg:col-span-7 lg:pl-12 flex flex-col items-start">
-<div class="w-20 h-20 rounded-full border-2 border-primary flex items-center justify-center mb-6 bg-secondary-container">
-<span class="material-symbols-outlined text-4xl text-primary" data-icon="engineering">engineering</span>
-</div>
-<h2 class="text-5xl md:text-6xl font-headline font-black text-primary mb-8 tracking-tight">
-                            About<br/>Us
-                        </h2>
-<div class="space-y-6 text-on-surface-variant text-lg leading-relaxed max-w-2xl">
-<p>
-                                Twins Garage Doors LLC is a family-owned garage door and gate company serving residential and commercial customers. Built on hard work, honesty, and craftsmanship, we take pride in every installation, repair, and service call we handle. Our mission is to provide reliable, high-quality garage door and gate solutions with exceptional craftsmanship, honest service, and lasting value for every home and business we serve. Our vision is to be the most trusted name in garage door and gate services, known for innovation, integrity, and a commitment to enhancing security and convenience for our customers. Over 10 years of experience. Why choose us? Reliable &amp; experienced; fast &amp; dependable service; quality workmanship; customer satisfaction first; licensed &amp; insured.
-                            </p>
-<p>
-                                Twins Garage Doors LLC was born from a simple idea — do the job right, treat every customer like family, and never cut corners. The name comes from the most important people in my life, my twin sisters. They are the heart and soul behind this company's name and a daily reminder of why I work as hard as I do. Building this business was never just about garage doors — it was about building something I could be proud of, something worthy of the family name. What started as a passion for craftsmanship grew into a full-service garage door and gate company serving both homeowners and businesses. From our very first installation to every commercial project we take on today, we've built our reputation one door at a time. Today, Twins Garage Doors LLC is proud to be a trusted name because we treat every job like it's our most important one. Because for us, it's not just business — it's family.
-                            </p>
-</div>
-<div class="mt-10 flex flex-wrap items-center gap-8">
-<a class="text-primary font-bold hover:underline flex items-center gap-2" href="mailto:twinsgaragedoors@gmail.com">
-                                twinsgaragedoors@gmail.com
-                            </a>
-<span class="text-on-surface-variant font-medium">469-288-8881</span>
-</div>
-</div>
-</div>
-</div>
-</section>
 <section class="py-24 bg-[#1B365D]" id="servicios">
 <div class="grid-container">
 <div class="text-center mb-16">
