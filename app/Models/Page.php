@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Page extends Model
 {
@@ -22,13 +22,29 @@ class Page extends Model
         ];
     }
 
-    public function sections(): HasMany
+    public function aboutUsContent(): HasOne
     {
-        return $this->hasMany(PageSection::class)->orderBy('sort_order');
+        return $this->hasOne(AboutUsContent::class);
     }
 
-    public function textSnippets(): HasMany
+    public function servicesContent(): HasOne
     {
-        return $this->hasMany(PageTextSnippet::class);
+        return $this->hasOne(ServicesContent::class);
+    }
+
+    /**
+     * Ruta pública del sitio (path) para enlaces desde el admin.
+     */
+    public function previewPath(): string
+    {
+        return match ($this->slug) {
+            'welcome' => '/',
+            'about-us' => '/about-us',
+            'services' => '/services',
+            'our-work' => '/our-work',
+            'contact' => '/contact',
+            'reviews' => '/reviews',
+            default => '/',
+        };
     }
 }

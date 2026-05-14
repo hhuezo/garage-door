@@ -2,214 +2,226 @@
 
 namespace Database\Seeders;
 
-use App\Models\MediaFile;
+use App\Models\AboutUsCard;
+use App\Models\AboutUsContent;
 use App\Models\Page;
-use App\Models\PageSection;
-use App\Models\PageSectionItem;
-use App\Models\PageTextSnippet;
+use App\Models\ServicesCard;
+use App\Models\ServicesContent;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class SiteContentSeeder extends Seeder
 {
     public function run(): void
     {
-        $this->seedMedia();
-        $imageId = static fn (string $filename): ?int => MediaFile::query()
-            ->where('filename', $filename)
-            ->value('id');
+        $this->truncateSiteContentTables();
 
-        $welcome = Page::query()->create([
-            'slug' => 'welcome',
-            'name' => 'Home',
-            'meta_title' => 'Twins Garage Doors — DFW',
-            'meta_description' => 'Garage door and gate installation, repair, and service in the Dallas–Fort Worth area.',
-            'is_published' => true,
-        ]);
-        $this->snippet($welcome, 'hero_title_main', 'Serving Your Home and Business');
-        $this->snippet($welcome, 'hero_title_accent', 'One Door at a Time.');
-        $this->snippet($welcome, 'hero_lead', 'Licensed, experienced, and ready to take care of any job — big or small. Twins Garage Doors LLC is your trusted local expert for garage door and gate installation, repair, and service — for homes and businesses of all sizes. Service area: DFW. English & Spanish.');
-        $this->snippet($welcome, 'hero_cta_phone_label', 'Call Us Today For a Free Quote');
-        $this->snippet($welcome, 'hero_cta_secondary_label', 'Our Models');
+        $this->insertSitePages();
 
-        $secWelcomeServices = PageSection::query()->create([
-            'page_id' => $welcome->id,
-            'section_key' => 'services_preview',
-            'sort_order' => 0,
-            'settings' => ['columns' => 3],
-        ]);
-        $this->card($secWelcomeServices, 0, 'Garage door installation', 'Residential and commercial installation and replacement.', 'Read more', '#contacto', 'service1.jpg', $imageId);
-        $this->card($secWelcomeServices, 1, 'Repair & maintenance', 'Springs, panels, openers, and preventive maintenance.', 'Read more', '#contacto', 'service2.jpg', $imageId);
-        $this->card($secWelcomeServices, 2, 'Gates & openers', 'Gate automation and opener service for security and convenience.', 'Read more', '#contacto', 'service3.jpg', $imageId);
+        $page = Page::query()->where('slug', 'about-us')->firstOrFail();
 
-        $about = Page::query()->create([
-            'slug' => 'about-us',
-            'name' => 'About Us',
-            'meta_title' => 'About Us — Twins Garage Doors',
-            'meta_description' => 'Family-owned garage door and gate company serving DFW.',
-            'is_published' => true,
+        $aboutContent = AboutUsContent::query()->create([
+            'page_id' => $page->id,
+            'hero_eyebrow' => 'About Twins Garage Doors',
+            'hero_title' => 'Built on family, trust, and craftsmanship.',
+            'intro' => 'Twins Garage Doors LLC is a family-owned garage door and gate company serving residential and commercial customers across DFW.',
+            'hero_image_filename' => 'lifting-gates-garage.jpg',
+            'intro_icon' => 'engineering',
+            'values_section_heading' => 'Valores',
+            'values_section_logo_filename' => null,
         ]);
-        $this->snippet($about, 'hero_eyebrow', 'About Twins Garage Doors');
-        $this->snippet($about, 'hero_title', 'Built on family, trust, and craftsmanship.');
-        $this->snippet($about, 'intro', 'Twins Garage Doors LLC is a family-owned garage door and gate company serving residential and commercial customers across DFW.');
 
-        $secAboutValues = PageSection::query()->create([
-            'page_id' => $about->id,
-            'section_key' => 'value_cards',
-            'sort_order' => 0,
-            'settings' => null,
-        ]);
-        $this->card($secAboutValues, 0, 'Our mission', 'Reliable, high-quality garage door and gate solutions with honest service and lasting value.', 'Learn more', '/#contacto', 'lifting-gates-garage.jpg', $imageId);
-        $this->card($secAboutValues, 1, 'Our vision', 'To be the most trusted name in garage door and gate services through integrity and innovation.', 'Learn more', '/#contacto', '3.jpg', $imageId);
-        $this->card($secAboutValues, 2, 'Why choose us', 'Licensed & insured, fast response, quality workmanship, and customer satisfaction first.', 'Learn more', '/#contacto', 'instalacion-de-puertas-automaticas.jpg.webp', $imageId);
+        $this->aboutUsCard($aboutContent, 0, 'Our mission', 'Reliable, high-quality garage door and gate solutions with honest service and lasting value.', 'garage');
+        $this->aboutUsCard($aboutContent, 1, 'Our vision', 'To be the most trusted name in garage door and gate services through integrity and innovation.', 'construction');
+        $this->aboutUsCard($aboutContent, 2, 'Why choose us', 'Licensed & insured, fast response, quality workmanship, and customer satisfaction first.', 'handyman');
 
-        $services = Page::query()->create([
-            'slug' => 'services',
-            'name' => 'Services',
-            'meta_title' => 'Services — Twins Garage Doors',
-            'meta_description' => 'Installation, repair, gates, and openers.',
-            'is_published' => true,
+        $servicesPage = Page::query()->where('slug', 'services')->firstOrFail();
+        $servicesContent = ServicesContent::query()->create([
+            'page_id' => $servicesPage->id,
+            'hero_title' => 'Servicios',
+            'hero_lead' => 'Ofrecemos soluciones integrales para todas sus necesidades de puertas de garaje. Desde instalaciones expertas hasta reparaciones de emergencia, nuestro equipo técnico altamente capacitado garantiza durabilidad y seguridad en cada proyecto. Con años de experiencia y un enfoque en la calidad arquitectónica, Twins Garage Doors es su socio de confianza para el mantenimiento residencial y comercial.',
+            'hero_image_filename' => 'lifting-gates-garage.jpg',
         ]);
-        $this->snippet($services, 'page_kicker', 'Services you need');
-        $this->snippet($services, 'page_title', 'What we do for homes and businesses');
 
-        $secServices = PageSection::query()->create([
-            'page_id' => $services->id,
-            'section_key' => 'service_cards',
-            'sort_order' => 0,
-            'settings' => null,
-        ]);
-        $this->card($secServices, 0, 'Garage door installation', 'New installs and replacements tailored to your style and budget.', 'Get a quote', '/contact', 'service1.jpg', $imageId);
-        $this->card($secServices, 1, 'Repair & maintenance', 'Springs, cables, panels, openers, and tune-ups to extend door life.', 'Get a quote', '/contact', 'service2.jpg', $imageId);
-        $this->card($secServices, 2, 'Gates & openers', 'Gate automation, access control, and opener upgrades.', 'Get a quote', '/contact', 'service3.jpg', $imageId);
+        $this->servicesCard($servicesContent, 0, 'Instalación Residencial', 'Instalación experta de puertas de garaje modernas y duraderas, adaptadas al estilo arquitectónico de su hogar.', 'garage', 'service1.jpg', 'light');
+        $this->servicesCard($servicesContent, 1, 'Servicio Técnico', 'Mantenimiento preventivo y diagnóstico preciso para asegurar el funcionamiento óptimo de sus sistemas.', 'engineering', 'service2.jpg', 'light');
+        $this->servicesCard($servicesContent, 2, 'Reparaciones 24/7', 'Atención inmediata para emergencias, resortes rotos, cables sueltos o motores averiados en cualquier momento.', 'build', 'service3.jpg', 'accent');
+        $this->servicesCard($servicesContent, 3, 'Automatización', 'Sistemas inteligentes de apertura remota y control desde smartphone para máxima comodidad y seguridad.', 'settings_input_component', 'service1.jpg', 'light');
+        $this->servicesCard($servicesContent, 4, 'Seguridad y Control', 'Refuerzos de seguridad y sensores de movimiento para proteger lo que más importa en su propiedad.', 'security', 'service2.jpg', 'light');
+        $this->servicesCard($servicesContent, 5, 'Soluciones Comerciales', 'Puertas de alto tráfico y gran escala para almacenes, naves industriales y centros comerciales.', 'factory', 'service3.jpg', 'light');
 
-        $ourWork = Page::query()->create([
-            'slug' => 'our-work',
-            'name' => 'Our Work',
-            'meta_title' => 'Our Work — Twins Garage Doors',
-            'meta_description' => 'Recent garage door projects in DFW.',
-            'is_published' => true,
-        ]);
-        $this->snippet($ourWork, 'hero_title_line1', 'Our');
-        $this->snippet($ourWork, 'hero_title_line2', 'Work');
-        $this->snippet($ourWork, 'hero_lead', 'A selection of residential and commercial installations we are proud to stand behind.');
-
-        $secProjects = PageSection::query()->create([
-            'page_id' => $ourWork->id,
-            'section_key' => 'project_cards',
-            'sort_order' => 0,
-            'settings' => null,
-        ]);
-        $this->card($secProjects, 0, 'Modern residential install', 'Full replacement with insulated sectional door and quiet opener.', 'View details', '/contact', 'service1.jpg', $imageId);
-        $this->card($secProjects, 1, 'Commercial bay service', 'Heavy-duty doors tuned for high-cycle daily use.', 'View details', '/contact', 'service2.jpg', $imageId);
-        $this->card($secProjects, 2, 'Curb appeal upgrade', 'Custom door style matched to the home exterior.', 'View details', '/contact', 'service3.jpg', $imageId);
-
-        $contact = Page::query()->create([
-            'slug' => 'contact',
-            'name' => 'Contact',
-            'meta_title' => 'Contact Us — Twins Garage Doors',
-            'meta_description' => 'Call, email, or send a message — DFW garage doors and gates.',
-            'is_published' => true,
-        ]);
-        $this->snippet($contact, 'hero_title', 'Contact us');
-        $this->snippet($contact, 'get_in_touch_lead', 'Our team is ready to help with garage door and gate installation, repairs, and support.');
-        $this->snippet($contact, 'service_area_line', 'Dallas–Fort Worth metro area, Texas');
-        $this->snippet($contact, 'phone_display', '469-288-8881');
-        $this->snippet($contact, 'email_display', 'twinsgaragedoors@gmail.com');
-        $this->snippet($contact, 'map_overlay_title', 'We serve the Dallas–Fort Worth metro area');
-
-        $reviews = Page::query()->create([
-            'slug' => 'reviews',
-            'name' => 'Reviews',
-            'meta_title' => 'Reviews — Twins Garage Doors',
-            'meta_description' => 'Customer testimonials for Twins Garage Doors.',
-            'is_published' => true,
-        ]);
-        $this->snippet($reviews, 'hero_title_line1', 'What our customers say');
-        $this->snippet($reviews, 'hero_title_line2', 'Reviews & testimonials');
-        $this->snippet($reviews, 'cta_title', 'Call for service');
-        $this->snippet($reviews, 'cta_phone', '469-288-8881');
-        $this->snippet($reviews, 'cta_email', 'twinsgaragedoors@gmail.com');
-
-        $secReviews = PageSection::query()->create([
-            'page_id' => $reviews->id,
-            'section_key' => 'testimonials',
-            'sort_order' => 0,
-            'settings' => null,
-        ]);
-        $this->testimonial($secReviews, 0, 'Professional installation and spotless cleanup.', 'From the first call to the final walkthrough, the crew was on time and respectful of our property.', 'Maria G.', 5, 'service1.jpg', $imageId);
-        $this->testimonial($secReviews, 1, 'Fast response when our spring failed.', 'They diagnosed the issue quickly and had us back in business the same day.', 'James T.', 5, 'service2.jpg', $imageId);
-        $this->testimonial($secReviews, 2, 'Beautiful modern doors.', 'Twins helped us pick the right style; installation was smooth.', 'Elena R.', 5, 'service3.jpg', $imageId);
+        $this->logLine(sprintf(
+            'SiteContentSeeder OK. pages=%d, about_us_contents=%d, about_us_cards=%d, services_contents=%d, services_cards=%d.',
+            DB::table('pages')->count(),
+            DB::table('about_us_contents')->count(),
+            DB::table('about_us_cards')->count(),
+            DB::table('services_contents')->count(),
+            DB::table('services_cards')->count(),
+        ));
     }
 
-    private function seedMedia(): void
+    private function logLine(string $message): void
     {
-        $rows = [
-            ['filename' => 'lifting-gates-garage.jpg', 'alt_text' => 'Garage door technician at work'],
-            ['filename' => 'instalacion-de-puertas-automaticas.jpg.webp', 'alt_text' => 'Automatic garage door installation'],
-            ['filename' => '3.jpg', 'alt_text' => 'Team with tablet on site'],
-            ['filename' => 'service1.jpg', 'alt_text' => 'Residential garage door'],
-            ['filename' => 'service2.jpg', 'alt_text' => 'Garage door repair'],
-            ['filename' => 'service3.jpg', 'alt_text' => 'Gate and garage services'],
-        ];
-
-        foreach ($rows as $row) {
-            MediaFile::query()->firstOrCreate(
-                ['filename' => $row['filename'], 'path' => 'images'],
-                [
-                    'disk' => 'public',
-                    'alt_text' => $row['alt_text'],
-                    'mime_type' => null,
-                    'size_bytes' => null,
-                ]
-            );
+        if ($this->command !== null) {
+            $this->command->info($message);
         }
     }
 
-    private function snippet(Page $page, string $key, string $value, string $locale = 'en'): void
+    private function truncateSiteContentTables(): void
     {
-        PageTextSnippet::query()->updateOrCreate(
-            ['page_id' => $page->id, 'field_key' => $key, 'locale' => $locale],
-            ['value' => $value]
-        );
+        $p = DB::getTablePrefix();
+        $tAboutCards = "`{$p}about_us_cards`";
+        $tAboutContents = "`{$p}about_us_contents`";
+        $tServCards = "`{$p}services_cards`";
+        $tServContents = "`{$p}services_contents`";
+        $tPages = "`{$p}pages`";
+
+        $driver = Schema::getConnection()->getDriverName();
+
+        if (in_array($driver, ['mysql', 'mariadb'], true)) {
+            DB::unprepared('SET FOREIGN_KEY_CHECKS=0');
+            try {
+                DB::unprepared("TRUNCATE TABLE {$tAboutCards}");
+                DB::unprepared("TRUNCATE TABLE {$tAboutContents}");
+                if (Schema::hasTable('services_cards')) {
+                    DB::unprepared("TRUNCATE TABLE {$tServCards}");
+                }
+                if (Schema::hasTable('services_contents')) {
+                    DB::unprepared("TRUNCATE TABLE {$tServContents}");
+                }
+                DB::unprepared("TRUNCATE TABLE {$tPages}");
+            } finally {
+                DB::unprepared('SET FOREIGN_KEY_CHECKS=1');
+            }
+        } elseif ($driver === 'sqlite') {
+            Schema::disableForeignKeyConstraints();
+            try {
+                if (Schema::hasTable('services_cards')) {
+                    DB::table('services_cards')->delete();
+                }
+                if (Schema::hasTable('services_contents')) {
+                    DB::table('services_contents')->delete();
+                }
+                DB::table('about_us_cards')->delete();
+                DB::table('about_us_contents')->delete();
+                DB::table('pages')->delete();
+            } finally {
+                Schema::enableForeignKeyConstraints();
+            }
+        } else {
+            Schema::disableForeignKeyConstraints();
+            try {
+                if (Schema::hasTable('services_cards')) {
+                    DB::table('services_cards')->truncate();
+                }
+                if (Schema::hasTable('services_contents')) {
+                    DB::table('services_contents')->truncate();
+                }
+                DB::table('about_us_cards')->truncate();
+                DB::table('about_us_contents')->truncate();
+                DB::table('pages')->truncate();
+            } finally {
+                Schema::enableForeignKeyConstraints();
+            }
+        }
+
+        $this->logLine('Truncadas tablas: about_us_*, services_*, pages.');
     }
 
     /**
-     * @param  callable(string): ?int  $imageId
+     * Inserta filas en pages (tras truncate).
      */
-    private function card(PageSection $section, int $order, string $title, string $body, ?string $linkLabel, ?string $linkUrl, string $filename, callable $imageId): void
+    private function insertSitePages(): void
     {
-        PageSectionItem::query()->create([
-            'page_section_id' => $section->id,
-            'sort_order' => $order,
-            'item_type' => 'card',
-            'title' => $title,
-            'subtitle' => null,
-            'body' => $body,
-            'link_label' => $linkLabel,
-            'link_url' => $linkUrl,
-            'image_id' => $imageId($filename),
-            'image_filename' => $filename,
-            'extra' => null,
-        ]);
+        $now = now();
+        $rows = [
+            [
+                'slug' => 'welcome',
+                'name' => 'Home',
+                'meta_title' => 'Twins Garage Doors — DFW',
+                'meta_description' => 'Garage door and gate installation, repair, and service in the Dallas–Fort Worth area.',
+                'is_published' => true,
+            ],
+            [
+                'slug' => 'about-us',
+                'name' => 'About Us',
+                'meta_title' => 'About Us — Twins Garage Doors',
+                'meta_description' => 'Family-owned garage door and gate company serving DFW.',
+                'is_published' => true,
+            ],
+            [
+                'slug' => 'services',
+                'name' => 'Services',
+                'meta_title' => 'Services — Twins Garage Doors',
+                'meta_description' => 'Installation, repair, gates, and openers.',
+                'is_published' => true,
+            ],
+            [
+                'slug' => 'our-work',
+                'name' => 'Our Work',
+                'meta_title' => 'Our Work — Twins Garage Doors',
+                'meta_description' => 'Recent garage door projects in DFW.',
+                'is_published' => true,
+            ],
+            [
+                'slug' => 'contact',
+                'name' => 'Contact',
+                'meta_title' => 'Contact Us — Twins Garage Doors',
+                'meta_description' => 'Call, email, or send a message — DFW garage doors and gates.',
+                'is_published' => true,
+            ],
+            [
+                'slug' => 'reviews',
+                'name' => 'Reviews',
+                'meta_title' => 'Reviews — Twins Garage Doors',
+                'meta_description' => 'Customer testimonials for Twins Garage Doors.',
+                'is_published' => true,
+            ],
+        ];
+
+        $batch = [];
+        foreach ($rows as $row) {
+            $batch[] = [
+                'slug' => $row['slug'],
+                'name' => $row['name'],
+                'meta_title' => $row['meta_title'],
+                'meta_description' => $row['meta_description'],
+                'is_published' => $row['is_published'] ? 1 : 0,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ];
+        }
+
+        DB::table('pages')->insert($batch);
+
+        $this->logLine('Insertadas '.count($batch).' filas en pages.');
     }
 
-    /**
-     * @param  callable(string): ?int  $imageId
-     */
-    private function testimonial(PageSection $section, int $order, string $title, string $body, string $name, int $stars, string $filename, callable $imageId): void
+    private function aboutUsCard(AboutUsContent $content, int $order, string $title, string $body, string $icon): void
     {
-        PageSectionItem::query()->create([
-            'page_section_id' => $section->id,
+        AboutUsCard::query()->create([
+            'about_us_content_id' => $content->id,
             'sort_order' => $order,
-            'item_type' => 'testimonial',
             'title' => $title,
-            'subtitle' => $name,
             'body' => $body,
             'link_label' => null,
             'link_url' => null,
-            'image_id' => $imageId($filename),
-            'image_filename' => $filename,
-            'extra' => ['stars' => $stars],
+            'image_filename' => null,
+            'icon' => $icon,
+        ]);
+    }
+
+    private function servicesCard(ServicesContent $content, int $order, string $title, string $body, string $icon, string $imagePath, string $theme): void
+    {
+        ServicesCard::query()->create([
+            'services_content_id' => $content->id,
+            'sort_order' => $order,
+            'title' => $title,
+            'body' => $body,
+            'icon' => $icon,
+            'image_path' => $imagePath,
+            'theme' => $theme,
         ]);
     }
 }

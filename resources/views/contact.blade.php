@@ -1,4 +1,4 @@
-@extends('menu')
+@extends('menu_main')
 
 @section('page_title', 'Contact Us — Twins Garage Doors')
 
