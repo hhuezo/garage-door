@@ -52,7 +52,7 @@
                             <div class="rounded-full bg-primary-container p-3 text-on-primary">
                                 <span class="material-symbols-outlined text-4xl md:text-[2.5rem]" aria-hidden="true">{{ $heroIcon }}</span>
                             </div>
-                            <h1 class="font-headline text-4xl font-black leading-none text-primary-container md:text-5xl lg:text-6xl">
+                            <h1 class="font-headline text-3xl sm:text-4xl font-black leading-none text-primary-container md:text-5xl lg:text-6xl">
                                 {{ $ourWorkContent->hero_title_primary ?: 'Our' }} <br/>
                                 <span class="text-on-primary-container uppercase italic">{{ $ourWorkContent->hero_title_accent ?: 'Work' }}</span>
                             </h1>
@@ -66,8 +66,8 @@
                         </a>
                     </div>
 
-                    <div class="relative w-full lg:w-1/2">
-                        <div class="our-work-hero-bg-shape bg-secondary-container/30 p-6 md:p-8">
+                    <div class="relative w-full min-h-[280px] sm:min-h-[340px] lg:min-h-0 lg:w-1/2">
+                        <div class="our-work-hero-bg-shape bg-secondary-container/30 p-4 sm:p-6 md:p-8">
                             <img
                                 alt=""
                                 class="our-work-hero-bg-shape w-full object-cover shadow-2xl transition duration-500 hover:grayscale-0"
@@ -75,12 +75,12 @@
                             />
                         </div>
                         @if (($ourWorkContent->stat_value ?? '') !== '' || ($ourWorkContent->stat_caption ?? '') !== '')
-                        <div class="absolute right-0 top-10 z-10 rounded-l-3xl bg-primary-container p-5 text-on-primary shadow-xl md:p-6">
-                            <p class="font-headline text-3xl font-black md:text-4xl">{{ $ourWorkContent->stat_value ?: '+100' }}</p>
-                            <p class="text-sm font-semibold text-on-primary-container opacity-90">{{ $ourWorkContent->stat_caption }}</p>
+                        <div class="absolute right-0 top-4 sm:top-10 z-10 rounded-l-2xl sm:rounded-l-3xl bg-primary-container p-3 sm:p-5 text-on-primary shadow-xl md:p-6 max-w-[58%] sm:max-w-none">
+                            <p class="font-headline text-2xl sm:text-3xl font-black md:text-4xl">{{ $ourWorkContent->stat_value ?: '+100' }}</p>
+                            <p class="text-xs sm:text-sm font-semibold text-on-primary-container opacity-90">{{ $ourWorkContent->stat_caption }}</p>
                         </div>
                         @endif
-                        <div class="absolute bottom-10 right-4 z-20 w-1/2 max-w-[220px] overflow-hidden rounded-2xl border-4 border-surface-container-lowest shadow-2xl sm:max-w-xs">
+                        <div class="absolute bottom-4 sm:bottom-10 right-2 sm:right-4 z-20 w-[45%] max-w-[160px] sm:w-1/2 sm:max-w-[220px] overflow-hidden rounded-xl sm:rounded-2xl border-2 sm:border-4 border-surface-container-lowest shadow-2xl sm:max-w-xs">
                             <img alt="" class="w-full object-cover" src="{{ $heroInsetSrc }}"/>
                         </div>
                     </div>

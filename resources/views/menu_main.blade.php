@@ -113,13 +113,31 @@
             background-size: cover;
             background-position: center;
         }
+        html, body {
+            overflow-x: hidden;
+            max-width: 100%;
+        }
+        body.site-nav-open {
+            overflow: hidden;
+        }
+        #site-mobile-menu[hidden] {
+            display: none !important;
+        }
+        #site-mobile-menu:not([hidden]) {
+            display: block;
+        }
+        @media (min-width: 768px) {
+            #site-mobile-menu {
+                display: none !important;
+            }
+        }
     </style>
 @stack('styles')
 </head>
 <body class="bg-surface text-on-surface font-body antialiased">
 <header class="sticky top-0 w-full z-50 nav-background shadow-lg border-b border-white/10">
-<nav class="mx-auto w-full max-w-screen-2xl px-6 py-3 sm:px-8 lg:px-12 xl:px-14">
-<div class="flex items-center justify-between">
+<nav class="mx-auto w-full max-w-screen-2xl px-4 py-3 sm:px-6 md:px-8 lg:px-12 xl:px-14" aria-label="Main navigation">
+<div class="flex items-center justify-between gap-3">
 <!-- Left Links -->
 <div class="hidden md:flex flex-1 justify-end items-center space-x-8 mr-10">
 <a class="text-white hover:text-on-primary-container transition-colors font-headline font-bold text-xs uppercase tracking-widest" href="{{ url('/') }}">Home</a>
@@ -127,12 +145,12 @@
 <a class="text-white hover:text-on-primary-container transition-colors font-headline font-bold text-xs uppercase tracking-widest" href="{{ route('about') }}">About Us</a>
 </div>
 <!-- Centered Logo -->
-<div class="flex flex-col items-center justify-center shrink-0">
-<a href="{{ url('/') }}" class="flex items-center gap-2">
-<span class="material-symbols-outlined text-white text-3xl font-black">garage</span>
+<div class="flex flex-col items-center justify-center shrink-0 min-w-0">
+<a href="{{ url('/') }}" class="flex items-center gap-1.5 sm:gap-2">
+<span class="material-symbols-outlined text-white text-2xl sm:text-3xl font-black shrink-0">garage</span>
 <div class="flex flex-col leading-none">
-<span class="text-white font-headline font-black text-base uppercase tracking-tight">Twins Garage</span>
-<span class="text-white font-headline font-black text-base uppercase tracking-tight">Doors LLC</span>
+<span class="text-white font-headline font-black text-xs sm:text-sm md:text-base uppercase tracking-tight">Twins Garage</span>
+<span class="text-white font-headline font-black text-xs sm:text-sm md:text-base uppercase tracking-tight">Doors LLC</span>
 </div>
 </a>
 </div>
@@ -143,17 +161,28 @@
 <a class="{{ request()->routeIs('reviews') ? 'border-b-2 border-white pb-0.5 ' : '' }}text-white hover:text-on-primary-container transition-colors font-headline font-bold text-xs uppercase tracking-widest" href="{{ route('reviews') }}">Reviews</a>
 </div>
 <!-- Mobile Emergency Button (Visible on mobile instead of links) -->
-<div class="md:hidden">
-<a href="tel:+14692888881" class="bg-on-primary-container text-primary px-3 py-2 rounded font-headline font-bold text-[10px] uppercase tracking-tighter inline-block">
-                    Emergency
-                </a>
+<div class="flex items-center gap-2 md:hidden shrink-0">
+<a href="tel:+14692888881" class="bg-on-primary-container text-primary px-2.5 py-1.5 sm:px-3 sm:py-2 rounded font-headline font-bold text-[10px] uppercase tracking-tighter whitespace-nowrap">Emergency</a>
+<button type="button" id="site-nav-toggle" class="inline-flex h-10 w-10 items-center justify-center rounded border border-white/30 text-white hover:bg-white/10 transition-colors" aria-expanded="false" aria-controls="site-mobile-menu" aria-label="Open menu">
+<span class="material-symbols-outlined text-2xl" id="site-nav-toggle-icon">menu</span>
+</button>
 </div>
+</div>
+<div id="site-mobile-menu" class="md:hidden border-t border-white/10 mt-3 pt-3" hidden>
+<ul class="flex flex-col gap-1">
+<li><a class="block rounded px-3 py-2.5 text-white font-headline font-bold text-sm uppercase tracking-widest hover:bg-white/10 {{ request()->is('/') ? 'bg-white/10' : '' }}" href="{{ url('/') }}">Home</a></li>
+<li><a class="block rounded px-3 py-2.5 text-white font-headline font-bold text-sm uppercase tracking-widest hover:bg-white/10 {{ request()->routeIs('services') ? 'bg-white/10' : '' }}" href="{{ route('services') }}">Services</a></li>
+<li><a class="block rounded px-3 py-2.5 text-white font-headline font-bold text-sm uppercase tracking-widest hover:bg-white/10 {{ request()->routeIs('about') ? 'bg-white/10' : '' }}" href="{{ route('about') }}">About Us</a></li>
+<li><a class="block rounded px-3 py-2.5 text-white font-headline font-bold text-sm uppercase tracking-widest hover:bg-white/10 {{ request()->routeIs('our_work') ? 'bg-white/10' : '' }}" href="{{ route('our_work') }}">Our Work</a></li>
+<li><a class="block rounded px-3 py-2.5 text-white font-headline font-bold text-sm uppercase tracking-widest hover:bg-white/10 {{ request()->routeIs('contact') ? 'bg-white/10' : '' }}" href="{{ route('contact') }}">Contact Us</a></li>
+<li><a class="block rounded px-3 py-2.5 text-white font-headline font-bold text-sm uppercase tracking-widest hover:bg-white/10 {{ request()->routeIs('reviews') ? 'bg-white/10' : '' }}" href="{{ route('reviews') }}">Reviews</a></li>
+</ul>
 </div>
 </nav>
 </header>
 @yield('content')
-<footer class="w-full bg-slate-950 py-12">
-<div class="mx-auto flex max-w-screen-2xl flex-col items-center justify-between gap-6 px-6 sm:px-8 md:flex-row lg:px-12 xl:px-14">
+<footer class="w-full bg-slate-950 py-8 sm:py-12">
+<div class="mx-auto flex max-w-screen-2xl flex-col items-center justify-between gap-6 px-4 sm:px-6 md:flex-row lg:px-12 xl:px-14">
 <div class="font-headline font-black text-white uppercase tracking-widest">
                 Twins Garage Doors
             </div>
@@ -167,4 +196,29 @@
             </div>
 </div>
 </footer>
+<script>
+(function () {
+    var toggle = document.getElementById('site-nav-toggle');
+    var panel = document.getElementById('site-mobile-menu');
+    var icon = document.getElementById('site-nav-toggle-icon');
+    if (!toggle || !panel) return;
+    function setOpen(open) {
+        panel.hidden = !open;
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+        document.body.classList.toggle('site-nav-open', open);
+        if (icon) icon.textContent = open ? 'close' : 'menu';
+    }
+    toggle.addEventListener('click', function () {
+        setOpen(panel.hidden);
+    });
+    panel.querySelectorAll('a').forEach(function (link) {
+        link.addEventListener('click', function () { setOpen(false); });
+    });
+    window.addEventListener('resize', function () {
+        if (window.matchMedia('(min-width: 768px)').matches) setOpen(false);
+    });
+})();
+</script>
+@stack('scripts')
 </body></html>

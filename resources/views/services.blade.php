@@ -15,25 +15,25 @@
 
 @section('content')
 <div class="bg-surface">
-    <div class="mx-auto w-full max-w-screen-2xl px-6 py-12 sm:px-8 md:py-16 lg:px-12 xl:px-14">
+    <div class="mx-auto w-full max-w-screen-2xl px-4 py-10 sm:px-6 sm:py-12 md:py-16 lg:px-12 xl:px-14">
         <main class="font-body text-on-surface">
             @php
                 $cabeceraImg = $servicesContent->hero_image_filename
                     ? \App\Support\CmsPage::imageUrlFromFilename($servicesContent->hero_image_filename)
                     : \App\Support\CmsPage::publicImageOrUrl(null);
             @endphp
-            <section class="relative mb-12 overflow-hidden bg-primary-container p-8 md:p-12 lg:mb-16">
+            <section class="relative mb-10 sm:mb-12 overflow-hidden bg-primary-container p-5 sm:p-8 md:p-12 lg:mb-16">
                 <div class="flex flex-col items-center gap-10 lg:flex-row lg:gap-12">
                     <div class="w-full lg:w-1/2">
                         <img
-                            class="services-image-mask h-[320px] w-full object-cover md:h-[400px]"
+                            class="services-image-mask h-[220px] sm:h-[280px] md:h-[400px] w-full object-cover"
                             alt=""
                             src="{{ $cabeceraImg }}"
                         />
                     </div>
                     <div class="w-full space-y-6 lg:w-1/2">
-                        <h1 class="font-headline text-4xl font-black text-on-primary md:text-5xl">{{ $servicesContent->hero_title ?: 'Servicios' }}</h1>
-                        <p class="text-lg leading-relaxed text-on-primary-container md:text-xl whitespace-pre-wrap">{{ $servicesContent->hero_lead }}</p>
+                        <h1 class="font-headline text-3xl sm:text-4xl font-black text-on-primary md:text-5xl">{{ $servicesContent->hero_title ?: 'Servicios' }}</h1>
+                        <p class="text-base sm:text-lg leading-relaxed text-on-primary-container md:text-xl whitespace-pre-wrap">{{ $servicesContent->hero_lead }}</p>
                     </div>
                 </div>
             </section>
