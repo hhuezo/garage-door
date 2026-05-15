@@ -11,9 +11,9 @@
     <div class="row">
         <div class="col-xl-12">
                     <div class="card custom-card">
-                <div class="card-header justify-content-between">
-                    <div class="card-title">Pages</div>
-                    <span class="text-muted small">Editores: About Us y Servicios.</span>
+                <div class="card-header justify-content-between flex-wrap gap-2">
+                    <div class="card-title mb-0">Pages</div>
+                    <span class="text-muted small">Editores: About Us, Servicios y Our Work.</span>
                 </div>
                 <div class="card-body">
                     @if ($errors->any())

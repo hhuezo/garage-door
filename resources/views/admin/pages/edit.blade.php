@@ -21,13 +21,46 @@
             border-radius: 0.375rem;
             overflow: auto;
             padding-bottom: 1rem;
+            -webkit-overflow-scrolling: touch;
         }
+        /* Móvil: drawer a ancho completo; escritorio: 50% del viewport */
         body .offcanvas.cms-page-offcanvas.offcanvas-end,
         body .offcanvas.cms-page-offcanvas.offcanvas-start {
-            --bs-offcanvas-width: 50vw;
+            --bs-offcanvas-width: 100%;
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+        @media (min-width: 768px) {
+            body .offcanvas.cms-page-offcanvas.offcanvas-end,
+            body .offcanvas.cms-page-offcanvas.offcanvas-start {
+                --bs-offcanvas-width: 50vw;
+                width: 50vw !important;
+                max-width: 50vw !important;
+            }
         }
         body .offcanvas.cms-page-offcanvas {
             z-index: 10050 !important;
+        }
+        body .offcanvas.cms-page-offcanvas .offcanvas-title {
+            font-size: 1rem;
+            line-height: 1.35;
+            padding-right: 0.5rem;
+        }
+        @media (max-width: 767.98px) {
+            .cms-editor-preview-shell {
+                min-height: 50vh;
+                padding-left: 0.25rem;
+                padding-right: 0.25rem;
+            }
+            body .offcanvas.cms-page-offcanvas .offcanvas-header,
+            body .offcanvas.cms-page-offcanvas .offcanvas-body,
+            body .offcanvas.cms-page-offcanvas .offcanvas-footer {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+            body .offcanvas.cms-page-offcanvas .offcanvas-footer .btn {
+                width: 100%;
+            }
         }
         body .offcanvas-backdrop {
             z-index: 10045 !important;
@@ -87,7 +120,7 @@
 @endpush
 
 @section('content')
-    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-3">
+    <div class="d-flex flex-wrap justify-content-between align-items-start align-items-md-end gap-3 mb-3">
         <div>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-1">
@@ -97,11 +130,11 @@
             </nav>
             <h1 class="page-title fw-medium fs-18 mb-0">{{ $page->name }}</h1>
         </div>
-        <div class="btn-list">
-            <a href="{{ route('pages.index') }}" class="btn btn-white btn-wave waves-effect waves-light">
+        <div class="btn-list d-flex flex-wrap gap-2 w-100 w-md-auto">
+            <a href="{{ route('pages.index') }}" class="btn btn-white btn-wave waves-effect waves-light flex-grow-1 flex-md-grow-0">
                 <i class="ri-list-check align-middle me-1 lh-1"></i> Listado
             </a>
-            <a href="{{ url($page->previewPath()) }}" target="_blank" rel="noopener" class="btn btn-primary btn-wave me-0 waves-effect waves-light">
+            <a href="{{ url($page->previewPath()) }}" target="_blank" rel="noopener" class="btn btn-primary btn-wave me-0 waves-effect waves-light flex-grow-1 flex-md-grow-0">
                 <i class="ri-external-link-line me-1"></i> Sitio público
             </a>
         </div>
@@ -166,7 +199,7 @@
         </form>
     @endif
 
-    <div class="cms-editor-preview-shell p-2 p-md-3 mb-5" style="min-height: 70vh;">
+    <div class="cms-editor-preview-shell p-2 p-md-3 mb-5" style="min-height: min(70vh, 100%);">
         @if ($isAbout)
             @include('admin.pages.editor.about_us_edit', [
                 'page' => $page,
