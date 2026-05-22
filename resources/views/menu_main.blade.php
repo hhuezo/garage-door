@@ -140,9 +140,18 @@
 <div class="flex items-center justify-between gap-3">
 <!-- Left Links -->
 <div class="hidden md:flex flex-1 justify-end items-center space-x-8 mr-10">
-<a class="text-white hover:text-on-primary-container transition-colors font-headline font-bold text-xs uppercase tracking-widest" href="{{ url('/') }}">Home</a>
-<a class="text-white hover:text-on-primary-container transition-colors font-headline font-bold text-xs uppercase tracking-widest" href="{{ route('services') }}">Services</a>
-<a class="text-white hover:text-on-primary-container transition-colors font-headline font-bold text-xs uppercase tracking-widest" href="{{ route('about') }}">About Us</a>
+<a href="{{ url('/') }}" @class([
+    'text-white hover:text-on-primary-container transition-colors font-headline font-bold text-xs uppercase tracking-widest',
+    'border-b-2 border-white pb-0.5' => request()->is('/'),
+])>Home</a>
+<a href="{{ route('services') }}" @class([
+    'text-white hover:text-on-primary-container transition-colors font-headline font-bold text-xs uppercase tracking-widest',
+    'border-b-2 border-white pb-0.5' => request()->routeIs('services'),
+])>Services</a>
+<a href="{{ route('about') }}" @class([
+    'text-white hover:text-on-primary-container transition-colors font-headline font-bold text-xs uppercase tracking-widest',
+    'border-b-2 border-white pb-0.5' => request()->routeIs('about'),
+])>About Us</a>
 </div>
 <!-- Centered Logo -->
 <div class="flex flex-col items-center justify-center shrink-0 min-w-0">
@@ -156,9 +165,18 @@
 </div>
 <!-- Right Links -->
 <div class="hidden md:flex flex-1 justify-start items-center space-x-8 ml-10">
-<a class="text-white hover:text-on-primary-container transition-colors font-headline font-bold text-xs uppercase tracking-widest" href="{{ route('our_work') }}">Our Work</a>
-<a class="text-white hover:text-on-primary-container transition-colors font-headline font-bold text-xs uppercase tracking-widest" href="{{ route('contact') }}">Contact Us</a>
-<a class="{{ request()->routeIs('reviews') ? 'border-b-2 border-white pb-0.5 ' : '' }}text-white hover:text-on-primary-container transition-colors font-headline font-bold text-xs uppercase tracking-widest" href="{{ route('reviews') }}">Reviews</a>
+<a href="{{ route('our_work') }}" @class([
+    'text-white hover:text-on-primary-container transition-colors font-headline font-bold text-xs uppercase tracking-widest',
+    'border-b-2 border-white pb-0.5' => request()->routeIs('our_work'),
+])>Our Work</a>
+<a href="{{ route('contact') }}" @class([
+    'text-white hover:text-on-primary-container transition-colors font-headline font-bold text-xs uppercase tracking-widest',
+    'border-b-2 border-white pb-0.5' => request()->routeIs('contact'),
+])>Contact Us</a>
+<a href="{{ route('reviews') }}" @class([
+    'text-white hover:text-on-primary-container transition-colors font-headline font-bold text-xs uppercase tracking-widest',
+    'border-b-2 border-white pb-0.5' => request()->routeIs('reviews'),
+])>Reviews</a>
 </div>
 <!-- Mobile Emergency Button (Visible on mobile instead of links) -->
 <div class="flex items-center gap-2 md:hidden shrink-0">

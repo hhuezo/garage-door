@@ -43,7 +43,7 @@
 @endphp
 
 @section('content')
-<div class="bg-background font-body text-on-background">
+<div class="bg-background font-body text-on-background bg-secondary">
     <div class="mx-auto w-full max-w-screen-2xl">
         <section class="px-4 py-12 text-center sm:px-8 md:px-16 md:py-16 lg:px-20 lg:py-20">
             <h1 class="font-headline text-3xl font-extrabold tracking-tight text-secondary-container sm:text-4xl md:text-[2.25rem]">

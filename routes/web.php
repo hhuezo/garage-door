@@ -3,14 +3,13 @@
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PublicAboutUsController;
+use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\PublicOurWorkController;
 use App\Http\Controllers\PublicServicesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', WelcomeController::class);
 
 Route::get('/about-us', PublicAboutUsController::class)->name('about');
 
