@@ -42,9 +42,17 @@
         padding: 0;
         overflow: hidden;
     }
-    .about-us-cms .about-us-card-icon-bubble .material-symbols-outlined {
-        font-size: 2.5rem;
-        line-height: 1;
+        .about-us-cms .about-us-card-icon-bubble .material-symbols-outlined {
+            font-size: 2.5rem;
+            line-height: 1;
+        }
+    .about-us-cms .about-us-cta-banner-logo {
+        max-width: 42%;
+    }
+    @media (min-width: 768px) {
+        .about-us-cms .about-us-cta-banner-logo {
+            max-width: 38%;
+        }
     }
     @media (min-width: 768px) {
         .about-us-cms .about-us-card-icon-bubble {
@@ -69,7 +77,7 @@
         $introIconFileUrl = \App\Support\CmsPage::introIconFileUrl($aboutContent?->intro_icon_filename);
         $introIconName = \App\Support\CmsPage::materialIconOrDefault($aboutContent?->intro_icon ?? null);
         $valuesHeadingRaw = $aboutContent?->values_section_heading ?? null;
-        $valuesSectionHeading = ($valuesHeadingRaw !== null && $valuesHeadingRaw !== '') ? (string) $valuesHeadingRaw : 'Valores';
+        $valuesSectionHeading = ($valuesHeadingRaw !== null && $valuesHeadingRaw !== '') ? (string) $valuesHeadingRaw : '';
         $valuesSectionLogoUrl = ($aboutContent && $aboutContent->values_section_logo_filename)
             ? \App\Support\CmsPage::imageUrlFromFilename($aboutContent->values_section_logo_filename)
             : null;
@@ -118,6 +126,31 @@
                     </div>
                 </section>
 
+                <section class="relative z-10 mb-16 md:mb-24">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center bg-[#0b3169] rounded-2xl sm:rounded-3xl p-8 sm:p-10 md:p-12 text-white shadow-2xl">
+                        <div class="lg:col-span-4">
+                            <p class="font-headline text-5xl sm:text-6xl md:text-7xl font-black text-on-primary-container leading-none">
+                                3.5k+
+                            </p>
+                            <p class="mt-2 font-headline text-xl sm:text-2xl font-bold uppercase tracking-wide text-secondary-container">
+                                Projects
+                            </p>
+                        </div>
+                        <div class="lg:col-span-8 space-y-6">
+                            <p class="text-base sm:text-lg leading-relaxed opacity-90">
+                                This year we continue to serve homeowners and businesses across DFW with reliable garage door
+                                and gate solutions — from quick repairs to full replacements. Our growing portfolio reflects
+                                the trust our community places in Twins Garage Doors LLC.
+                            </p>
+                            <a href="{{ route('our_work') }}"
+                                class="inline-flex items-center gap-2 font-headline text-sm font-bold uppercase tracking-wide text-on-primary-container hover:gap-4 transition-all">
+                                Read more
+                                <span class="material-symbols-outlined text-sm">double_arrow</span>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+
                 <section class="relative z-10 mb-12 flex flex-col items-start text-left">
                     <div class="mb-4 flex items-center gap-4">
                         @if ($valuesSectionLogoUrl)
@@ -144,12 +177,20 @@
                                 @if ($isFirst)
                                     <div class="card-notched mt-8 flex min-h-[320px] sm:min-h-[380px] md:min-h-[480px] flex-grow flex-col overflow-hidden bg-[#0b3169] px-6 sm:px-8 md:px-12 pb-12 sm:pb-16 md:pb-20 pt-14 sm:pt-16 md:pt-20 text-white shadow-2xl">
                                         <h4 class="mb-4 md:mb-6 font-headline text-2xl sm:text-3xl md:text-4xl font-bold text-on-primary-container">{{ $card->title }}</h4>
-                                        <p class="mb-auto text-base leading-relaxed opacity-90">{{ $card->body }}</p>
+                                        <p class="mb-6 text-base leading-relaxed opacity-90">{{ $card->body }}</p>
+                                        <a href="{{ route('contact') }}" class="mt-auto inline-flex items-center gap-2 font-headline text-sm font-bold uppercase tracking-wide text-on-primary-container hover:gap-4 transition-all">
+                                            Read more
+                                            <span class="material-symbols-outlined text-sm">double_arrow</span>
+                                        </a>
                                     </div>
                                 @else
                                     <div class="card-notched mt-8 flex min-h-[320px] sm:min-h-[380px] md:min-h-[480px] flex-grow flex-col overflow-hidden bg-white px-6 sm:px-8 md:px-12 pb-12 sm:pb-16 md:pb-20 pt-14 sm:pt-16 md:pt-20 text-[#0b3169] shadow-lg">
                                         <h4 class="mb-4 md:mb-6 font-headline text-2xl sm:text-3xl md:text-4xl font-bold text-on-primary-container">{{ $card->title }}</h4>
-                                        <p class="mb-auto text-base font-medium leading-relaxed text-gray-600">{{ $card->body }}</p>
+                                        <p class="mb-6 text-base font-medium leading-relaxed text-gray-600">{{ $card->body }}</p>
+                                        <a href="{{ route('contact') }}" class="mt-auto inline-flex items-center gap-2 font-headline text-sm font-bold uppercase tracking-wide text-on-primary-container hover:gap-4 transition-all">
+                                            Read more
+                                            <span class="material-symbols-outlined text-sm">double_arrow</span>
+                                        </a>
                                     </div>
                                 @endif
                             </div>
@@ -158,6 +199,11 @@
                 @else
                     <p class="text-on-surface-variant text-sm relative z-10">No hay tarjetas configuradas para esta página.</p>
                 @endif
+
+                <section class="relative z-10 mt-16 md:mt-24">
+                    @include('partials.about_us_cta_banner', ['aboutContent' => $aboutContent])
+                </section>
+
             </main>
         </div>
     </div>

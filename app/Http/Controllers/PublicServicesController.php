@@ -19,9 +19,21 @@ class PublicServicesController extends Controller
             abort(404);
         }
 
+        $homeContent = Page::query()
+            ->where('slug', 'welcome')
+            ->with('homeContent')
+            ->first()?->homeContent;
+
+        $aboutContent = Page::query()
+            ->where('slug', 'about-us')
+            ->with('aboutUsContent')
+            ->first()?->aboutUsContent;
+
         return view('services', [
             'page' => $page,
             'servicesContent' => $servicesContent,
+            'homeContent' => $homeContent,
+            'aboutContent' => $aboutContent,
         ]);
     }
 }

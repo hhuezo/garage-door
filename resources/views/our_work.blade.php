@@ -20,7 +20,7 @@
     $resolveHref = function (?string $raw): string {
         $r = trim((string) ($raw ?? ''));
         if ($r === '') {
-            return '/#contacto';
+            return route('contact');
         }
         if (str_starts_with($r, 'http://') || str_starts_with($r, 'https://')) {
             return $r;
@@ -121,6 +121,22 @@
                     @endforeach
                 </div>
             </section>
+
+            <section class="mt-16 md:mt-24 max-w-3xl mx-auto text-center" data-purpose="footer-intro">
+                <p class="text-base leading-relaxed text-on-surface-variant md:text-lg">
+                    Every project reflects our commitment to safe installs, clear communication, and workmanship built to last.
+                    Browse our recent work across the Dallas–Fort Worth area — residential and commercial garage doors and gates.
+                </p>
+            </section>
+
+            <section class="mt-12 md:mt-16">
+                @include('partials.cta_bar')
+            </section>
+
+            <section class="mt-12 md:mt-16 pb-4">
+                @include('partials.social_follow')
+            </section>
+
         </main>
     </div>
 </div>

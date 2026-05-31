@@ -37,6 +37,11 @@ class Page extends Model
         return $this->hasOne(OurWorkContent::class);
     }
 
+    public function homeContent(): HasOne
+    {
+        return $this->hasOne(HomeContent::class);
+    }
+
     /**
      * Ruta pública del sitio (path) para enlaces desde el admin.
      */

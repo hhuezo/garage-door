@@ -131,4 +131,20 @@
             </main>
         </div>
     </div>
+
+    <div class="mt-2">
+        <p class="text-muted small px-3 py-2 mb-0 bg-light border-bottom">
+            Mapa: contenido compartido desde la página <strong>Home</strong> (Admin → Pages → Home → Contacto).
+        </p>
+        @include('partials.services_map_section', ['homeContent' => $homeContent ?? null])
+    </div>
+
+    <div class="bg-surface px-4 pb-12 pt-8 sm:px-6 md:pb-16">
+        <div class="mx-auto w-full max-w-screen-2xl lg:px-12 xl:px-14">
+            <p class="text-muted small mb-4">
+                Banner de contacto: contenido compartido desde <strong>About Us</strong> (Admin → Pages → About Us → banner de contacto).
+            </p>
+            @include('partials.about_us_cta_banner', ['aboutContent' => $aboutContent ?? null])
+        </div>
+    </div>
 </div>

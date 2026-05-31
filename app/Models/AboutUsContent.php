@@ -18,6 +18,12 @@ class AboutUsContent extends Model
         'intro_icon_filename',
         'values_section_heading',
         'values_section_logo_filename',
+        'cta_banner_heading',
+        'cta_banner_logo_filename',
+        'cta_banner_whatsapp_label',
+        'cta_banner_whatsapp_url',
+        'cta_banner_email_label',
+        'cta_banner_email',
     ];
 
     public function page(): BelongsTo

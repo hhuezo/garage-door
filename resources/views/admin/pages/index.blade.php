@@ -13,7 +13,7 @@
                     <div class="card custom-card">
                 <div class="card-header justify-content-between flex-wrap gap-2">
                     <div class="card-title mb-0">Pages</div>
-                    <span class="text-muted small">Editores: About Us, Servicios y Our Work.</span>
+                    <span class="text-muted small">Editores: About Us, Servicios, Our Work y Home.</span>
                 </div>
                 <div class="card-body">
                     @if ($errors->any())
@@ -75,7 +75,7 @@
                                             <span class="text-muted small">{{ $page->updated_at?->format('d/m/Y H:i') }}</span>
                                         </td>
                                         <td class="text-center">
-                                            @if (in_array($page->slug, ['about-us', 'services', 'our-work'], true))
+                                            @if (in_array($page->slug, ['about-us', 'services', 'our-work', 'welcome'], true))
                                                 <a href="{{ route('pages.edit', $page) }}" class="btn btn-sm btn-info btn-wave"
                                                     title="Editar en el panel">
                                                     <i class="ri-edit-line"></i>

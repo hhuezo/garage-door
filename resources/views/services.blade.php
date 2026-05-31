@@ -57,7 +57,7 @@
                                 <h3 class="font-headline text-xl font-bold {{ $isAccent ? 'text-on-primary' : 'text-primary' }} md:text-2xl">{{ $card->title }}</h3>
                                 <p class="text-base leading-relaxed {{ $isAccent ? 'text-secondary-fixed' : 'text-on-surface-variant' }}">{{ $card->body }}</p>
                                 <div class="flex items-end justify-between pt-4">
-                                    <a href="{{ url('/#contacto') }}" class="flex items-center gap-2 font-headline text-sm font-bold uppercase tracking-wide transition-all hover:gap-4 {{ $isAccent ? 'text-on-primary' : 'text-secondary' }}">
+                                    <a href="{{ route('contact') }}" class="flex items-center gap-2 font-headline text-sm font-bold uppercase tracking-wide transition-all hover:gap-4 {{ $isAccent ? 'text-on-primary' : 'text-secondary' }}">
                                         Leer más
                                         <span class="material-symbols-outlined text-sm">double_arrow</span>
                                     </a>
@@ -70,12 +70,19 @@
             @endif
 
             <div class="mt-16 flex flex-wrap items-center justify-center gap-8 md:mt-24 lg:justify-start">
-                <a href="{{ url('/#contacto') }}" class="rounded-full border-2 border-primary bg-surface-container-lowest px-8 py-3 font-headline text-sm font-bold uppercase tracking-wide text-primary transition-colors hover:bg-secondary-container">
-                    Contáctanos
+                <a href="{{ route('contact') }}" class="rounded-full border-2 border-primary bg-surface-container-lowest px-8 py-3 font-headline text-sm font-bold uppercase tracking-wide text-primary transition-colors hover:bg-secondary-container">
+                    Contact us
                 </a>
                 <a href="tel:+14692888881" class="font-headline text-2xl font-bold text-primary md:text-3xl">469-288-8881</a>
             </div>
+
         </main>
+    </div>
+
+    @include('partials.services_map_section', ['homeContent' => $homeContent ?? null])
+
+    <div class="mx-auto w-full max-w-screen-2xl px-4 pb-16 pt-10 sm:px-6 sm:pb-20 md:pt-14 lg:px-12 xl:px-14">
+        @include('partials.about_us_cta_banner', ['aboutContent' => $aboutContent ?? null])
     </div>
 </div>
 @endsection

@@ -257,6 +257,80 @@
                 @else
                     <p class="text-on-surface-variant text-sm relative z-10">No hay tarjetas configuradas para esta página.</p>
                 @endif
+
+                @if ($aboutContent)
+                <section class="relative z-10 mt-16 md:mt-24 position-relative">
+                    <button type="button" class="btn btn-primary btn-sm shadow-sm position-absolute top-0 end-0 m-2" style="z-index: 30;" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-about-cta-banner" aria-controls="offcanvas-about-cta-banner">
+                        Editar banner de contacto
+                    </button>
+                    <div class="offcanvas offcanvas-end cms-page-offcanvas d-flex flex-column" tabindex="-1" id="offcanvas-about-cta-banner" aria-labelledby="offcanvas-about-cta-banner-label" data-bs-scroll="true">
+                        <div class="offcanvas-header border-bottom flex-shrink-0">
+                            <h5 class="offcanvas-title" id="offcanvas-about-cta-banner-label">Banner de contacto — About Us</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+                        </div>
+                        <div class="offcanvas-body flex-grow-1 overflow-auto">
+                            <div class="form-group">
+                                <label class="form-label" for="about-cta-banner-heading">Texto principal</label>
+                                <textarea class="form-control" id="about-cta-banner-heading" rows="4" form="{{ $formId }}"
+                                    name="about_content[cta_banner_heading]">{{ old('about_content.cta_banner_heading', $aboutContent->cta_banner_heading) }}</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label d-block">Logo (lado izquierdo del banner)</label>
+                                @php
+                                    $ctaBannerLogoUrl = ($aboutContent->cta_banner_logo_filename ?? '') !== ''
+                                        ? \App\Support\CmsPage::imageUrlFromFilename($aboutContent->cta_banner_logo_filename)
+                                        : null;
+                                @endphp
+                                @if ($ctaBannerLogoUrl)
+                                    <div class="mb-2 text-center">
+                                        <img src="{{ $ctaBannerLogoUrl }}" alt="" class="img-fluid rounded border" style="max-height: 72px; object-fit: contain;">
+                                    </div>
+                                @else
+                                    <span class="form-text text-muted d-block mb-2">Sin logo propio; se muestra el dibujo decorativo por defecto.</span>
+                                @endif
+                                <input type="file" class="form-control cms-offcanvas-file-input" id="about-cta-banner-logo" form="{{ $formId }}" name="about_cta_banner_logo" accept="image/jpeg,image/png,image/gif,image/webp,.jpg,.jpeg,.png,.gif,.webp">
+                                <div class="form-check mt-2">
+                                    <input class="form-check-input" type="checkbox" value="1" form="{{ $formId }}" id="about-remove-cta-banner-logo" name="about_remove_cta_banner_logo">
+                                    <label class="form-check-label" for="about-remove-cta-banner-logo">Quitar logo (vuelve el dibujo por defecto)</label>
+                                </div>
+                                <span class="form-text text-muted">JPG, PNG, GIF o WebP (máx. 8&nbsp;MB). <code>public/images/about_us/</code></span>
+                            </div>
+                            <hr class="my-4">
+                            <h6 class="text-muted text-uppercase small mb-3">WhatsApp</h6>
+                            <div class="form-group">
+                                <label class="form-label" for="about-cta-whatsapp-label">Etiqueta visible</label>
+                                <input type="text" class="form-control" id="about-cta-whatsapp-label" form="{{ $formId }}"
+                                    name="about_content[cta_banner_whatsapp_label]"
+                                    value="{{ old('about_content.cta_banner_whatsapp_label', $aboutContent->cta_banner_whatsapp_label) }}" maxlength="255" placeholder="469-288-8881">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="about-cta-whatsapp-url">Enlace (URL o teléfono)</label>
+                                <input type="text" class="form-control" id="about-cta-whatsapp-url" form="{{ $formId }}"
+                                    name="about_content[cta_banner_whatsapp_url]"
+                                    value="{{ old('about_content.cta_banner_whatsapp_url', $aboutContent->cta_banner_whatsapp_url) }}" maxlength="512" placeholder="https://wa.me/14692888881">
+                            </div>
+                            <hr class="my-4">
+                            <h6 class="text-muted text-uppercase small mb-3">Email</h6>
+                            <div class="form-group">
+                                <label class="form-label" for="about-cta-email-label">Etiqueta visible</label>
+                                <input type="text" class="form-control" id="about-cta-email-label" form="{{ $formId }}"
+                                    name="about_content[cta_banner_email_label]"
+                                    value="{{ old('about_content.cta_banner_email_label', $aboutContent->cta_banner_email_label) }}" maxlength="255" placeholder="twinsgaragedoors@gmail.com">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="about-cta-email">Dirección de correo</label>
+                                <input type="text" class="form-control" id="about-cta-email" form="{{ $formId }}"
+                                    name="about_content[cta_banner_email]"
+                                    value="{{ old('about_content.cta_banner_email', $aboutContent->cta_banner_email) }}" maxlength="255" placeholder="twinsgaragedoors@gmail.com">
+                            </div>
+                        </div>
+                        <div class="offcanvas-footer border-top bg-light p-3 flex-shrink-0 d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary" form="{{ $formId }}">Guardar cambios</button>
+                        </div>
+                    </div>
+                    @include('partials.about_us_cta_banner', ['aboutContent' => $aboutContent])
+                </section>
+                @endif
             </main>
         </div>
     </div>

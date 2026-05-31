@@ -1,8 +1,12 @@
 <?php
 
+use App\Http\Controllers\Admin\AppointmentBookingController;
+use App\Http\Controllers\Admin\AppointmentSettingsController;
+use App\Http\Controllers\Admin\AppointmentSlotController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PublicAboutUsController;
+use App\Http\Controllers\PublicContactController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\PublicOurWorkController;
 use App\Http\Controllers\PublicServicesController;
@@ -17,9 +21,9 @@ Route::get('/services', PublicServicesController::class)->name('services');
 
 Route::get('/our-work', PublicOurWorkController::class)->name('our_work');
 
-Route::get('/contact', function () {
-    return view('contact');
-})->name('contact');
+Route::get('/contact', [PublicContactController::class, 'show'])->name('contact');
+Route::get('/contact/available-slots', [PublicContactController::class, 'availableSlots'])->name('contact.available-slots');
+Route::post('/contact/appointment', [PublicContactController::class, 'storeAppointment'])->name('contact.appointment.store');
 
 Route::get('/reviews', function () {
     return view('reviews');
@@ -34,8 +38,12 @@ Route::post('/contact', function (Request $request) {
         'message' => ['required', 'string', 'max:5000'],
     ]);
 
-    return redirect()
-        ->route('contact')
+    $previous = url()->previous();
+    $redirectTo = ($previous === url('/') || str_ends_with($previous, '/#contacto'))
+        ? url('/#contacto')
+        : route('contact');
+
+    return redirect($redirectTo)
         ->with('status', 'Thank you — we received your message and will get back to you soon.');
 })->name('contact.submit');
 
@@ -51,6 +59,15 @@ Route::middleware('auth')->group(function () {
     Route::put('/pages/{id}/about-us', [PageController::class, 'updateAboutUs'])->name('pages.about-us.update');
     Route::put('/pages/{id}/services', [PageController::class, 'updateServices'])->name('pages.services.update');
     Route::put('/pages/{id}/our-work', [PageController::class, 'updateOurWork'])->name('pages.our-work.update');
+    Route::put('/pages/{id}/welcome', [PageController::class, 'updateWelcome'])->name('pages.welcome.update');
+
+    Route::get('/appointments/settings', [AppointmentSettingsController::class, 'index'])->name('appointments.settings');
+    Route::post('/appointments/settings', [AppointmentSettingsController::class, 'updateSettings'])->name('appointments.settings.update');
+    Route::post('/appointments/slots', [AppointmentSlotController::class, 'store'])->name('appointments.slots.store');
+    Route::put('/appointments/slots/{slot}', [AppointmentSlotController::class, 'update'])->name('appointments.slots.update');
+    Route::delete('/appointments/slots/{slot}', [AppointmentSlotController::class, 'destroy'])->name('appointments.slots.destroy');
+    Route::get('/appointments/bookings', [AppointmentBookingController::class, 'index'])->name('appointments.bookings.index');
+    Route::patch('/appointments/bookings/{booking}/cancel', [AppointmentBookingController::class, 'cancel'])->name('appointments.bookings.cancel');
 });
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');

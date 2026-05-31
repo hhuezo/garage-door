@@ -91,35 +91,14 @@
                     </article>
                 @endforeach
             </div>
+        </section>
 
-            <div class="mt-12 flex justify-center gap-6 md:mt-16">
-                <button type="button" class="flex h-14 w-14 items-center justify-center rounded-full bg-secondary-fixed text-primary transition-all hover:bg-secondary-container" aria-label="Previous testimonials">
-                    <span class="material-symbols-outlined text-3xl">arrow_back</span>
-                </button>
-                <button type="button" class="flex h-14 w-14 items-center justify-center rounded-full bg-secondary-fixed text-primary transition-all hover:bg-secondary-container" aria-label="Next testimonials">
-                    <span class="material-symbols-outlined text-3xl">arrow_forward</span>
-                </button>
-            </div>
+        <section class="px-4 pb-8 sm:px-8 md:px-16 lg:px-20">
+            @include('partials.cta_bar', ['variant' => 'reviews'])
         </section>
 
         <section class="px-4 pb-12 sm:px-8 md:px-16 md:pb-16 lg:px-20">
-            <div class="reviews-hard-shadow mx-auto max-w-md rounded-2xl border-2 border-secondary-container bg-primary-container px-4 py-4 text-center sm:max-w-lg sm:rounded-3xl sm:px-6 sm:py-5">
-                <h3 class="mb-4 font-headline text-sm font-bold text-on-primary sm:mb-5 sm:text-base">Call for service</h3>
-                <div class="flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6">
-                    <a href="tel:+14692888881" class="flex items-center gap-2 text-on-primary transition-opacity hover:opacity-90">
-                        <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-secondary-container text-primary-container">
-                            <span class="material-symbols-outlined reviews-fill-icon text-base">call</span>
-                        </span>
-                        <span class="font-headline text-sm font-semibold sm:text-[0.9375rem]">469-288-8881</span>
-                    </a>
-                    <a href="mailto:twinsgaragedoors@gmail.com" class="flex min-w-0 items-center gap-2 text-on-primary transition-opacity hover:opacity-90">
-                        <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-secondary-container text-primary-container">
-                            <span class="material-symbols-outlined reviews-fill-icon text-base">mail</span>
-                        </span>
-                        <span class="break-all text-left font-body text-xs font-medium leading-snug sm:text-sm">twinsgaragedoors@gmail.com</span>
-                    </a>
-                </div>
-            </div>
+            @include('partials.social_follow')
         </section>
     </div>
 </div>

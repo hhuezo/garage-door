@@ -6,7 +6,8 @@
     $isAbout = $page->slug === 'about-us';
     $isServices = $page->slug === 'services';
     $isOurWork = $page->slug === 'our-work';
-    $isCmsMaterialIcons = $isAbout || $isServices || $isOurWork;
+    $isHome = $page->slug === 'welcome';
+    $isCmsMaterialIcons = $isAbout || $isServices || $isOurWork || $isHome;
 @endphp
 
 @push('styles')
@@ -182,6 +183,10 @@
         <div class="alert alert-warning">No hay registro en <code>our_work_contents</code> para Our Work. Ejecuta migraciones y <code>php artisan db:seed --class=SiteContentSeeder</code>.</div>
     @endif
 
+    @if ($isHome && ! $page->homeContent)
+        <div class="alert alert-warning">No hay registro en <code>home_contents</code> para Home. Ejecuta migraciones y <code>php artisan db:seed --class=SiteContentSeeder</code>.</div>
+    @endif
+
     @if ($isAbout)
         <form method="post" action="{{ route('pages.about-us.update', $page) }}" id="form-about-us" enctype="multipart/form-data">
             @csrf
@@ -197,6 +202,11 @@
             @csrf
             @method('PUT')
         </form>
+    @elseif ($isHome)
+        <form method="post" action="{{ route('pages.welcome.update', $page) }}" id="form-home" enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
+        </form>
     @endif
 
     <div class="cms-editor-preview-shell p-2 p-md-3 mb-5" style="min-height: min(70vh, 100%);">
@@ -207,10 +217,17 @@
         @elseif ($isServices)
             @include('admin.pages.editor.services_edit', [
                 'page' => $page,
+                'homeContent' => $homeContent ?? null,
+                'aboutContent' => $aboutContent ?? null,
             ])
         @elseif ($isOurWork)
             @include('admin.pages.editor.our_work_edit', [
                 'page' => $page,
+            ])
+        @elseif ($isHome)
+            @include('admin.pages.editor.home_edit', [
+                'page' => $page,
+                'serviceCards' => $serviceCards ?? collect(),
             ])
         @endif
     </div>
@@ -240,6 +257,26 @@
             @include('admin.pages.editor.drawers.our_work_project_drawer_offcanvas', [
                 'project' => $project,
                 'formId' => 'form-our-work',
+                'positionLabel' => $loop->iteration,
+            ])
+        @endforeach
+    @endif
+
+    @if ($isHome && $page->homeContent && $page->homeContent->stats->isNotEmpty())
+        @foreach ($page->homeContent->stats as $stat)
+            @include('admin.pages.editor.drawers.home_stat_drawer_offcanvas', [
+                'stat' => $stat,
+                'formId' => 'form-home',
+                'positionLabel' => $loop->iteration,
+            ])
+        @endforeach
+    @endif
+
+    @if ($isHome && $page->homeContent && $page->homeContent->testimonials->isNotEmpty())
+        @foreach ($page->homeContent->testimonials as $testimonial)
+            @include('admin.pages.editor.drawers.home_testimonial_drawer_offcanvas', [
+                'testimonial' => $testimonial,
+                'formId' => 'form-home',
                 'positionLabel' => $loop->iteration,
             ])
         @endforeach

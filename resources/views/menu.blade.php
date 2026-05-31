@@ -169,6 +169,12 @@
                             </a>
                         </li>
                         <li class="slide">
+                            <a href="{{ route('appointments.settings') }}" id="adminAppointments" class="side-menu__item">
+                                <i class="ri-calendar-schedule-line side-menu__icon align-middle"></i>
+                                <span class="side-menu__label">Appointments</span>
+                            </a>
+                        </li>
+                        <li class="slide">
                             <a href="{{ url('/') }}" target="_blank" rel="noopener" class="side-menu__item">
                                 <i class="ri-external-link-line side-menu__icon align-middle"></i>
                                 <span class="side-menu__label">Ver sitio público</span>

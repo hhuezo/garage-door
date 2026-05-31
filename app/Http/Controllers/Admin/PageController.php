@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\AboutUsCard;
 use App\Models\AboutUsContent;
+use App\Models\HomeContent;
+use App\Models\HomeStat;
+use App\Models\HomeTestimonial;
 use App\Models\OurWorkContent;
 use App\Models\OurWorkProject;
 use App\Models\Page;
@@ -25,6 +28,8 @@ class PageController extends Controller
     /** Subcarpeta de public/images para subidas gestionadas de About Us (hero, logo Valores, etc.). */
     private const ABOUT_US_SECTION_IMAGES_DIR = 'about_us';
 
+    private const ABOUT_US_CTA_LOGO_PREFIX = 'about-us-cta-logo-';
+
     /** Subcarpeta de public/images para la página Servicios (cabecera con imagen). */
     private const SERVICES_SECTION_IMAGES_DIR = 'services';
 
@@ -38,6 +43,14 @@ class PageController extends Controller
     private const OUR_WORK_HERO_MAIN_PREFIX = 'our-work-hero-main-';
 
     private const OUR_WORK_HERO_INSET_PREFIX = 'our-work-hero-inset-';
+
+    private const HOME_SECTION_IMAGES_DIR = 'home';
+
+    private const HOME_HERO_BG_PREFIX = 'home-hero-bg-';
+
+    private const HOME_HERO_INSET_PREFIX = 'home-hero-inset-';
+
+    private const HOME_WORK_MAIN_PREFIX = 'home-work-main-';
 
     public function index(): View
     {
@@ -65,8 +78,20 @@ class PageController extends Controller
         if ($page->slug === 'services') {
             $page->load(['servicesContent.cards']);
 
+            $homeContent = Page::query()
+                ->where('slug', 'welcome')
+                ->with('homeContent')
+                ->first()?->homeContent;
+
+            $aboutContent = Page::query()
+                ->where('slug', 'about-us')
+                ->with('aboutUsContent')
+                ->first()?->aboutUsContent;
+
             return view('admin.pages.edit', [
                 'page' => $page,
+                'homeContent' => $homeContent,
+                'aboutContent' => $aboutContent,
             ]);
         }
 
@@ -75,6 +100,20 @@ class PageController extends Controller
 
             return view('admin.pages.edit', [
                 'page' => $page,
+            ]);
+        }
+
+        if ($page->slug === 'welcome') {
+            $page->load(['homeContent.stats', 'homeContent.testimonials']);
+
+            $servicesPage = Page::query()
+                ->where('slug', 'services')
+                ->with(['servicesContent.cards'])
+                ->first();
+
+            return view('admin.pages.edit', [
+                'page' => $page,
+                'serviceCards' => $servicesPage?->servicesContent?->cards ?? collect(),
             ]);
         }
 
@@ -101,6 +140,13 @@ class PageController extends Controller
             'about_content.values_section_heading' => ['sometimes', 'nullable', 'string', 'max:255'],
             'about_values_section_logo' => ['nullable', 'image', 'max:8192'],
             'about_remove_values_section_logo' => ['sometimes', 'boolean'],
+            'about_content.cta_banner_heading' => ['sometimes', 'nullable', 'string', 'max:65535'],
+            'about_content.cta_banner_whatsapp_label' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'about_content.cta_banner_whatsapp_url' => ['sometimes', 'nullable', 'string', 'max:512'],
+            'about_content.cta_banner_email_label' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'about_content.cta_banner_email' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'about_cta_banner_logo' => ['nullable', 'image', 'max:8192'],
+            'about_remove_cta_banner_logo' => ['sometimes', 'boolean'],
             'about_cards' => ['nullable', 'array'],
             'about_cards.*' => ['nullable', 'array'],
             'about_cards.*.title' => ['sometimes', 'nullable', 'string', 'max:255'],
@@ -120,7 +166,7 @@ class PageController extends Controller
 
             $incoming = $request->input('about_content');
             if (is_array($incoming)) {
-                foreach (['hero_eyebrow', 'hero_title', 'intro', 'values_section_heading'] as $field) {
+                foreach (['hero_eyebrow', 'hero_title', 'intro', 'values_section_heading', 'cta_banner_heading', 'cta_banner_whatsapp_label', 'cta_banner_whatsapp_url', 'cta_banner_email_label', 'cta_banner_email'] as $field) {
                     if (array_key_exists($field, $incoming)) {
                         $about->{$field} = $incoming[$field];
                     }
@@ -173,6 +219,28 @@ class PageController extends Controller
                     'about-us-values-logo-',
                     ['jpg', 'jpeg', 'png', 'gif', 'webp'],
                     'about_values_section_logo',
+                    self::ABOUT_US_SECTION_IMAGES_DIR
+                );
+            }
+
+            if ($request->boolean('about_remove_cta_banner_logo')) {
+                $this->deleteAboutManagedUpload($about->cta_banner_logo_filename, self::ABOUT_US_CTA_LOGO_PREFIX);
+                $about->cta_banner_logo_filename = null;
+            }
+
+            if ($request->hasFile('about_cta_banner_logo')) {
+                $file = $request->file('about_cta_banner_logo');
+                if (! $file instanceof UploadedFile || ! $file->isValid()) {
+                    throw ValidationException::withMessages([
+                        'about_cta_banner_logo' => ['No se pudo subir el logo del banner de contacto.'],
+                    ]);
+                }
+                $this->deleteAboutManagedUpload($about->cta_banner_logo_filename, self::ABOUT_US_CTA_LOGO_PREFIX);
+                $about->cta_banner_logo_filename = $this->storeAboutUploadInPublicImages(
+                    $file,
+                    self::ABOUT_US_CTA_LOGO_PREFIX,
+                    ['jpg', 'jpeg', 'png', 'gif', 'webp'],
+                    'about_cta_banner_logo',
                     self::ABOUT_US_SECTION_IMAGES_DIR
                 );
             }
@@ -531,6 +599,207 @@ class PageController extends Controller
         return redirect()
             ->route('pages.edit', ['id' => $page->id])
             ->with('success', 'Contenido Our Work guardado. Recarga el sitio público si hace falta.');
+    }
+
+    public function updateWelcome(Request $request, int $id): RedirectResponse
+    {
+        $page = Page::query()->findOrFail($id);
+        if ($page->slug !== 'welcome') {
+            abort(404);
+        }
+
+        $request->validate([
+            'home_content' => ['nullable', 'array'],
+            'home_content.hero_title_line1' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'home_content.hero_title_line2' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'home_content.hero_title_accent' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'home_content.hero_lead' => ['sometimes', 'nullable', 'string', 'max:65535'],
+            'home_content.hero_cta_primary_label' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'home_content.hero_cta_secondary_label' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'home_content.about_heading' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'home_content.about_subheading' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'home_content.about_link_label' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'home_content.about_paragraph_1' => ['sometimes', 'nullable', 'string', 'max:65535'],
+            'home_content.about_paragraph_2' => ['sometimes', 'nullable', 'string', 'max:65535'],
+            'home_content.services_heading_primary' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'home_content.services_heading_accent' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'home_content.work_heading_primary' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'home_content.work_heading_accent' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'home_content.work_intro' => ['sometimes', 'nullable', 'string', 'max:65535'],
+            'home_content.work_cta_label' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'home_content.reviews_heading_primary' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'home_content.reviews_heading_accent' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'home_content.reviews_cta_label' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'home_content.contact_heading' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'home_content.contact_phone' => ['sometimes', 'nullable', 'string', 'max:64'],
+            'home_content.contact_email' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'home_content.map_embed_url' => ['sometimes', 'nullable', 'string', 'max:2048'],
+            'home_hero_bg_image' => ['nullable', 'image', 'max:8192'],
+            'home_hero_inset_image' => ['nullable', 'image', 'max:8192'],
+            'home_work_main_image' => ['nullable', 'image', 'max:8192'],
+            'home_remove_hero_bg_image' => ['sometimes', 'boolean'],
+            'home_remove_hero_inset_image' => ['sometimes', 'boolean'],
+            'home_remove_work_main_image' => ['sometimes', 'boolean'],
+            'home_stats' => ['nullable', 'array'],
+            'home_stats.*' => ['nullable', 'array'],
+            'home_stats.*.stat_value' => ['sometimes', 'nullable', 'string', 'max:64'],
+            'home_stats.*.stat_caption' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'home_testimonials' => ['nullable', 'array'],
+            'home_testimonials.*' => ['nullable', 'array'],
+            'home_testimonials.*.quote' => ['sometimes', 'nullable', 'string', 'max:65535'],
+            'home_testimonials.*.icon' => ['sometimes', 'nullable', 'string', 'max:64', Rule::in(array_keys(MaterialIconOptions::serviceCardIcons()))],
+        ]);
+
+        DB::transaction(function () use ($request, $page) {
+            $content = HomeContent::query()->firstOrCreate(
+                ['page_id' => $page->id],
+                [
+                    'hero_title_line1' => '',
+                    'hero_title_line2' => '',
+                    'hero_title_accent' => '',
+                    'hero_lead' => '',
+                ]
+            );
+
+            $incoming = $request->input('home_content');
+            if (is_array($incoming)) {
+                foreach ([
+                    'hero_title_line1', 'hero_title_line2', 'hero_title_accent', 'hero_lead',
+                    'hero_cta_primary_label', 'hero_cta_secondary_label',
+                    'about_heading', 'about_subheading', 'about_link_label', 'about_paragraph_1', 'about_paragraph_2',
+                    'services_heading_primary', 'services_heading_accent',
+                    'work_heading_primary', 'work_heading_accent', 'work_intro', 'work_cta_label',
+                    'reviews_heading_primary', 'reviews_heading_accent', 'reviews_cta_label',
+                    'contact_heading', 'contact_phone', 'contact_email', 'map_embed_url',
+                ] as $field) {
+                    if (array_key_exists($field, $incoming)) {
+                        $content->{$field} = $incoming[$field];
+                    }
+                }
+            }
+
+            if ($request->boolean('home_remove_hero_bg_image')) {
+                $this->deleteAboutManagedUpload($content->hero_bg_image_filename, self::HOME_HERO_BG_PREFIX);
+                $content->hero_bg_image_filename = null;
+            }
+
+            if ($request->hasFile('home_hero_bg_image')) {
+                $file = $request->file('home_hero_bg_image');
+                if (! $file instanceof UploadedFile || ! $file->isValid()) {
+                    throw ValidationException::withMessages([
+                        'home_hero_bg_image' => ['No se pudo subir la imagen de fondo del hero.'],
+                    ]);
+                }
+                $this->deleteAboutManagedUpload($content->hero_bg_image_filename, self::HOME_HERO_BG_PREFIX);
+                $content->hero_bg_image_filename = $this->storeAboutUploadInPublicImages(
+                    $file,
+                    self::HOME_HERO_BG_PREFIX,
+                    ['jpg', 'jpeg', 'png', 'gif', 'webp'],
+                    'home_hero_bg_image',
+                    self::HOME_SECTION_IMAGES_DIR
+                );
+            }
+
+            if ($request->boolean('home_remove_hero_inset_image')) {
+                $this->deleteAboutManagedUpload($content->hero_inset_image_filename, self::HOME_HERO_INSET_PREFIX);
+                $content->hero_inset_image_filename = null;
+            }
+
+            if ($request->hasFile('home_hero_inset_image')) {
+                $file = $request->file('home_hero_inset_image');
+                if (! $file instanceof UploadedFile || ! $file->isValid()) {
+                    throw ValidationException::withMessages([
+                        'home_hero_inset_image' => ['No se pudo subir la imagen inset del hero.'],
+                    ]);
+                }
+                $this->deleteAboutManagedUpload($content->hero_inset_image_filename, self::HOME_HERO_INSET_PREFIX);
+                $content->hero_inset_image_filename = $this->storeAboutUploadInPublicImages(
+                    $file,
+                    self::HOME_HERO_INSET_PREFIX,
+                    ['jpg', 'jpeg', 'png', 'gif', 'webp'],
+                    'home_hero_inset_image',
+                    self::HOME_SECTION_IMAGES_DIR
+                );
+            }
+
+            if ($request->boolean('home_remove_work_main_image')) {
+                $this->deleteAboutManagedUpload($content->work_main_image_filename, self::HOME_WORK_MAIN_PREFIX);
+                $content->work_main_image_filename = null;
+            }
+
+            if ($request->hasFile('home_work_main_image')) {
+                $file = $request->file('home_work_main_image');
+                if (! $file instanceof UploadedFile || ! $file->isValid()) {
+                    throw ValidationException::withMessages([
+                        'home_work_main_image' => ['No se pudo subir la imagen de Our Work.'],
+                    ]);
+                }
+                $this->deleteAboutManagedUpload($content->work_main_image_filename, self::HOME_WORK_MAIN_PREFIX);
+                $content->work_main_image_filename = $this->storeAboutUploadInPublicImages(
+                    $file,
+                    self::HOME_WORK_MAIN_PREFIX,
+                    ['jpg', 'jpeg', 'png', 'gif', 'webp'],
+                    'home_work_main_image',
+                    self::HOME_SECTION_IMAGES_DIR
+                );
+            }
+
+            $allowedStatIds = $content->stats()->pluck('id')->all();
+            foreach ($request->input('home_stats', []) as $statId => $fields) {
+                $statId = (int) $statId;
+                if (! in_array($statId, $allowedStatIds, true) || ! is_array($fields)) {
+                    continue;
+                }
+                $stat = HomeStat::query()
+                    ->where('id', $statId)
+                    ->where('home_content_id', $content->id)
+                    ->first();
+                if (! $stat) {
+                    continue;
+                }
+                if (! array_key_exists('stat_value', $fields) && ! array_key_exists('stat_caption', $fields)) {
+                    continue;
+                }
+                $stat->update([
+                    'stat_value' => array_key_exists('stat_value', $fields) ? $fields['stat_value'] : $stat->stat_value,
+                    'stat_caption' => array_key_exists('stat_caption', $fields) ? $fields['stat_caption'] : $stat->stat_caption,
+                ]);
+            }
+
+            $allowedTestimonialIds = $content->testimonials()->pluck('id')->all();
+            foreach ($request->input('home_testimonials', []) as $testimonialId => $fields) {
+                $testimonialId = (int) $testimonialId;
+                if (! in_array($testimonialId, $allowedTestimonialIds, true) || ! is_array($fields)) {
+                    continue;
+                }
+                $testimonial = HomeTestimonial::query()
+                    ->where('id', $testimonialId)
+                    ->where('home_content_id', $content->id)
+                    ->first();
+                if (! $testimonial) {
+                    continue;
+                }
+                if (! array_key_exists('quote', $fields) && ! array_key_exists('icon', $fields)) {
+                    continue;
+                }
+                $iconRaw = $fields['icon'] ?? null;
+                $icon = array_key_exists('icon', $fields)
+                    ? ((is_string($iconRaw) && $iconRaw !== '') ? $iconRaw : null)
+                    : $testimonial->icon;
+                $testimonial->update([
+                    'quote' => array_key_exists('quote', $fields) ? $fields['quote'] : $testimonial->quote,
+                    'icon' => $icon,
+                ]);
+            }
+
+            $content->save();
+
+            $page->touch();
+        });
+
+        return redirect()
+            ->route('pages.edit', ['id' => $page->id])
+            ->with('success', 'Contenido Home guardado. Recarga el sitio público si hace falta.');
     }
 
     private function deleteAboutManagedUpload(?string $filename, string $prefix): void
