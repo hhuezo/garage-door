@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Page;
 use App\Services\AppointmentAvailability;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -21,10 +22,16 @@ class PublicContactController extends Controller
         $minDate = Carbon::today()->toDateString();
         $maxDate = Carbon::today()->addDays($settings->booking_window_days)->toDateString();
 
+        $homeContent = Page::query()
+            ->where('slug', 'welcome')
+            ->with('homeContent')
+            ->first()?->homeContent;
+
         return view('contact', [
             'appointmentMinDate' => $minDate,
             'appointmentMaxDate' => $maxDate,
             'bookingWindowDays' => $settings->booking_window_days,
+            'homeContent' => $homeContent,
         ]);
     }
 

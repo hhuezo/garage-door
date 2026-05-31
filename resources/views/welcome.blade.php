@@ -237,15 +237,7 @@
             <div class="max-w-6xl mx-auto">
                 <div class="flex flex-col md:flex-row items-stretch gap-8 md:gap-12">
                     <div class="w-full md:w-1/2 flex flex-col">
-                        <div class="mb-8 flex items-center gap-3">
-                            <div class="w-12 h-10 bg-white rounded-md flex items-center justify-center">
-                                <span class="material-symbols-outlined text-primary text-3xl font-black">garage</span>
-                            </div>
-                            <div class="flex flex-col leading-none">
-                                <span class="text-primary font-headline font-black text-xl uppercase">Twins Garage</span>
-                                <span class="text-primary font-headline font-black text-xl uppercase">Doors LLC</span>
-                            </div>
-                        </div>
+                        @include('partials.brand_logo', ['size' => 'lg', 'link' => false, 'class' => 'mb-8'])
                         <h2 class="text-[#002046] font-headline font-black text-3xl sm:text-4xl mb-6 sm:mb-8">{{ $homeContent?->contact_heading ?: 'Contact Us' }}
                         </h2>
                         @if (session('status'))

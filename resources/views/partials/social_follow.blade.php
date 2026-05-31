@@ -10,7 +10,7 @@
     </div>
 @elseif ($variant === 'contact')
     <div>
-        <h3 class="mb-3 font-headline text-[10px] font-bold uppercase tracking-widest text-primary">Follow us</h3>
+        <h3 class="mb-3 font-headline text-[10px] font-bold uppercase tracking-widest text-primary">Follow our social media</h3>
         <div class="flex gap-3">
             @include('partials.social_follow_links', ['linkClass' => 'flex h-10 w-10 items-center justify-center bg-primary text-on-primary transition-colors hover:bg-secondary'])
         </div>

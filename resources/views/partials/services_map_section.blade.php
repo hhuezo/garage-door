@@ -17,15 +17,7 @@
     </div>
 
     <div class="relative z-10 mx-auto w-full max-w-screen-2xl">
-        <div class="mb-6 flex items-center gap-3 sm:mb-8">
-            <div class="flex h-10 w-12 items-center justify-center rounded-md bg-white/10 sm:h-12">
-                <span class="material-symbols-outlined text-2xl font-black text-on-primary sm:text-3xl">garage</span>
-            </div>
-            <div class="flex flex-col leading-none">
-                <span class="font-headline text-lg font-black uppercase text-on-primary sm:text-xl">Twins Garage</span>
-                <span class="font-headline text-lg font-black uppercase text-on-primary sm:text-xl">Doors LLC</span>
-            </div>
-        </div>
+        @include('partials.brand_logo', ['size' => 'md', 'link' => false, 'class' => 'mb-6 sm:mb-8'])
 
         <h2 class="mb-8 font-headline text-2xl font-black text-on-primary-container sm:mb-10 sm:text-3xl md:text-4xl">
             {{ $mapHeading }}
