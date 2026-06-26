@@ -20,6 +20,12 @@ class OurWorkContent extends Model
         'hero_inset_image_filename',
         'stat_value',
         'stat_caption',
+        'cta_heading',
+        'cta_body',
+        'cta_call_label',
+        'cta_quote_label',
+        'cta_image_filename',
+        'cta_icon',
     ];
 
     public function page(): BelongsTo

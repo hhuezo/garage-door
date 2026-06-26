@@ -6,10 +6,15 @@
     $heroInsetFilename = $ourWorkContent?->hero_inset_image_filename;
     $formId = 'form-our-work';
     $iconChoices = \App\Support\MaterialIconOptions::serviceCardIcons();
-    $selectedHeroIcon = old('our_work_content.hero_icon', $ourWorkContent?->hero_icon ?? 'tune');
+    $selectedHeroIcon = old('our_work_content.hero_icon', $ourWorkContent?->hero_icon ?? 'engineering');
     if (! is_string($selectedHeroIcon) || ! array_key_exists($selectedHeroIcon, $iconChoices)) {
-        $selectedHeroIcon = 'tune';
+        $selectedHeroIcon = 'engineering';
     }
+    $selectedCtaIcon = old('our_work_content.cta_icon', $ourWorkContent?->cta_icon ?? 'handyman');
+    if (! is_string($selectedCtaIcon) || ! array_key_exists($selectedCtaIcon, $iconChoices)) {
+        $selectedCtaIcon = 'handyman';
+    }
+    $ctaImageFilename = $ourWorkContent?->cta_image_filename;
 @endphp
 
 <div class="our-work-edit">
@@ -210,6 +215,79 @@
                     </section>
                 @else
                     <p class="text-on-surface-variant text-sm">No hay proyectos en <code>our_work_projects</code>.</p>
+                @endif
+
+                @if ($ourWorkContent)
+                    <section class="mt-16 md:mt-24 position-relative">
+                        <button type="button" class="btn btn-primary btn-sm shadow-sm position-absolute top-0 end-0 m-2" style="z-index: 30;" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-our-work-cta" aria-controls="offcanvas-our-work-cta">
+                            Editar banner CTA
+                        </button>
+                        <div class="offcanvas offcanvas-end cms-page-offcanvas d-flex flex-column" tabindex="-1" id="offcanvas-our-work-cta" aria-labelledby="offcanvas-our-work-cta-label" data-bs-scroll="true">
+                            <div class="offcanvas-header border-bottom flex-shrink-0">
+                                <h5 class="offcanvas-title" id="offcanvas-our-work-cta-label">Banner CTA — Our Work</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+                            </div>
+                            <div class="offcanvas-body flex-grow-1 overflow-auto">
+                                <div class="form-group">
+                                    <label class="form-label" for="our-work-cta-heading">Título principal</label>
+                                    <input type="text" class="form-control" id="our-work-cta-heading" form="{{ $formId }}"
+                                        name="our_work_content[cta_heading]"
+                                        value="{{ old('our_work_content.cta_heading', $ourWorkContent->cta_heading) }}" maxlength="255">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="our-work-cta-body">Párrafo</label>
+                                    <textarea class="form-control" id="our-work-cta-body" rows="5" form="{{ $formId }}"
+                                        name="our_work_content[cta_body]">{{ old('our_work_content.cta_body', $ourWorkContent->cta_body) }}</textarea>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 form-group">
+                                        <label class="form-label" for="our-work-cta-call">Texto botón llamada</label>
+                                        <input type="text" class="form-control" id="our-work-cta-call" form="{{ $formId }}"
+                                            name="our_work_content[cta_call_label]"
+                                            value="{{ old('our_work_content.cta_call_label', $ourWorkContent->cta_call_label) }}" maxlength="255" placeholder="Call now">
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        <label class="form-label" for="our-work-cta-quote">Texto botón cotización</label>
+                                        <input type="text" class="form-control" id="our-work-cta-quote" form="{{ $formId }}"
+                                            name="our_work_content[cta_quote_label]"
+                                            value="{{ old('our_work_content.cta_quote_label', $ourWorkContent->cta_quote_label) }}" maxlength="255" placeholder="Request quote">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label d-block" for="our-work-cta-icon">Icono (sobre la foto)</label>
+                                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                                        <span class="material-symbols-outlined text-primary border rounded p-2 bg-white" style="font-size: 2rem; line-height: 1;" id="our-work-cta-icon-preview">{{ $selectedCtaIcon }}</span>
+                                        <select name="our_work_content[cta_icon]" id="our-work-cta-icon" class="form-select flex-grow-1 js-cms-material-icon-select" style="min-width: 10rem;" form="{{ $formId }}"
+                                            data-icon-preview="our-work-cta-icon-preview">
+                                            @foreach ($iconChoices as $val => $lab)
+                                                <option value="{{ $val }}" @selected($selectedCtaIcon === $val)>{{ $lab }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label d-block">Imagen del técnico (columna derecha)</label>
+                                    <div class="text-center mb-2">
+                                        @if ($ctaImageFilename)
+                                            <img src="{{ \App\Support\CmsPage::imageUrlFromFilename($ctaImageFilename) }}" alt="" class="img-fluid rounded border" style="max-height: 140px; object-fit: cover;">
+                                        @else
+                                            <span class="form-text text-muted d-block text-start">Sin imagen propia; se usa una imagen por defecto.</span>
+                                        @endif
+                                    </div>
+                                    <input type="file" class="form-control cms-offcanvas-file-input" id="our-work-cta-image" form="{{ $formId }}" name="our_work_cta_image" accept="image/jpeg,image/png,image/gif,image/webp,.jpg,.jpeg,.png,.gif,.webp">
+                                    <div class="form-check mt-2">
+                                        <input class="form-check-input" type="checkbox" value="1" form="{{ $formId }}" id="our-work-remove-cta-image" name="our_work_remove_cta_image">
+                                        <label class="form-check-label" for="our-work-remove-cta-image">Quitar imagen CTA</label>
+                                    </div>
+                                    <span class="form-text text-muted">JPG, PNG, GIF o WebP (máx. 8&nbsp;MB). <code>public/images/our_work/</code></span>
+                                </div>
+                            </div>
+                            <div class="offcanvas-footer border-top bg-light p-3 flex-shrink-0 d-flex justify-content-end">
+                                <button type="submit" class="btn btn-primary" form="{{ $formId }}">Guardar cambios</button>
+                            </div>
+                        </div>
+                        @include('partials.our_work_cta_banner', ['ourWorkContent' => $ourWorkContent])
+                    </section>
                 @endif
             </main>
         </div>

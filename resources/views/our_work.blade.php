@@ -13,6 +13,10 @@
     .our-work-icon-shadow {
         box-shadow: 0 4px 6px -1px rgba(10, 37, 88, 0.2), 0 2px 4px -1px rgba(10, 37, 88, 0.1);
     }
+    .our-work-cta-image-mask {
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 2.5rem), calc(100% - 2.5rem) 100%, 0 100%);
+        border-radius: 2rem 0 2rem 0;
+    }
 </style>
 @endpush
 
@@ -34,7 +38,7 @@
     $heroInsetSrc = $ourWorkContent->hero_inset_image_filename
         ? \App\Support\CmsPage::imageUrlFromFilename($ourWorkContent->hero_inset_image_filename)
         : \App\Support\CmsPage::publicImageOrUrl('service2.jpg');
-    $heroIcon = \App\Support\CmsPage::materialIconOrDefault($ourWorkContent->hero_icon, 'tune');
+    $heroIcon = \App\Support\CmsPage::materialIconOrDefault($ourWorkContent->hero_icon, 'engineering');
     $ctaHref = $resolveHref($ourWorkContent->hero_cta_url);
     $ctaLabel = $ourWorkContent->hero_cta_label !== null && $ourWorkContent->hero_cta_label !== ''
         ? $ourWorkContent->hero_cta_label
@@ -112,9 +116,7 @@
                                 <p class="mb-6 text-base leading-snug text-on-surface-variant whitespace-pre-wrap">{{ $project->body }}</p>
                                 <a href="{{ $cardHref }}" class="inline-flex items-center gap-2 rounded bg-primary-container px-4 py-2 font-headline text-xs font-bold uppercase tracking-wide text-on-primary transition-colors hover:bg-secondary">
                                     {{ $cardLabel }}
-                                    <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                        <path clip-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" fill-rule="evenodd"></path>
-                                    </svg>
+                                    <span class="material-symbols-outlined text-base">double_arrow</span>
                                 </a>
                             </div>
                         </article>
@@ -122,19 +124,12 @@
                 </div>
             </section>
 
-            <section class="mt-16 md:mt-24 max-w-3xl mx-auto text-center" data-purpose="footer-intro">
-                <p class="text-base leading-relaxed text-on-surface-variant md:text-lg">
-                    Every project reflects our commitment to safe installs, clear communication, and workmanship built to last.
-                    Browse our recent work across the Dallas–Fort Worth area — residential and commercial garage doors and gates.
-                </p>
-            </section>
-
-            <section class="mt-12 md:mt-16">
-                @include('partials.cta_bar')
+            <section class="mt-16 md:mt-24">
+                @include('partials.our_work_cta_banner', ['ourWorkContent' => $ourWorkContent, 'homeContent' => $homeContent ?? null])
             </section>
 
             <section class="mt-12 md:mt-16 pb-4">
-                @include('partials.social_follow')
+                @include('partials.social_follow', ['heading' => 'Síguenos'])
             </section>
 
         </main>

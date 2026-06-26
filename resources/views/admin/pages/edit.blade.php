@@ -117,6 +117,21 @@
             z-index: 10060 !important;
         }
         @endif
+        @if ($isOurWork)
+        .cms-editor-preview-shell .our-work-diagonal-cut-img {
+            clip-path: polygon(0 0, 100% 0, 100% 82%, 82% 100%, 0 100%);
+        }
+        .cms-editor-preview-shell .our-work-hero-bg-shape {
+            clip-path: polygon(15% 0%, 100% 0%, 100% 85%, 85% 100%, 0% 100%, 0% 15%);
+        }
+        .cms-editor-preview-shell .our-work-icon-shadow {
+            box-shadow: 0 4px 6px -1px rgba(10, 37, 88, 0.2), 0 2px 4px -1px rgba(10, 37, 88, 0.1);
+        }
+        .cms-editor-preview-shell .our-work-cta-image-mask {
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 2.5rem), calc(100% - 2.5rem) 100%, 0 100%);
+            border-radius: 2rem 0 2rem 0;
+        }
+        @endif
     </style>
 @endpush
 

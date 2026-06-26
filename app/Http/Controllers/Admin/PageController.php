@@ -44,6 +44,8 @@ class PageController extends Controller
 
     private const OUR_WORK_HERO_INSET_PREFIX = 'our-work-hero-inset-';
 
+    private const OUR_WORK_CTA_IMAGE_PREFIX = 'our-work-cta-image-';
+
     private const HOME_SECTION_IMAGES_DIR = 'home';
 
     private const HOME_HERO_BG_PREFIX = 'home-hero-bg-';
@@ -444,10 +446,17 @@ class PageController extends Controller
             'our_work_content.hero_cta_url' => ['sometimes', 'nullable', 'string', 'max:512'],
             'our_work_content.stat_value' => ['sometimes', 'nullable', 'string', 'max:64'],
             'our_work_content.stat_caption' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'our_work_content.cta_heading' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'our_work_content.cta_body' => ['sometimes', 'nullable', 'string', 'max:65535'],
+            'our_work_content.cta_call_label' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'our_work_content.cta_quote_label' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'our_work_content.cta_icon' => ['sometimes', 'nullable', 'string', 'max:64', Rule::in(array_keys(MaterialIconOptions::serviceCardIcons()))],
             'our_work_hero_main_image' => ['nullable', 'image', 'max:8192'],
             'our_work_hero_inset_image' => ['nullable', 'image', 'max:8192'],
+            'our_work_cta_image' => ['nullable', 'image', 'max:8192'],
             'our_work_remove_hero_main_image' => ['sometimes', 'boolean'],
             'our_work_remove_hero_inset_image' => ['sometimes', 'boolean'],
+            'our_work_remove_cta_image' => ['sometimes', 'boolean'],
             'our_work_projects' => ['nullable', 'array'],
             'our_work_projects.*' => ['nullable', 'array'],
             'our_work_projects.*.title' => ['sometimes', 'nullable', 'string', 'max:255'],
@@ -473,7 +482,7 @@ class PageController extends Controller
 
             $incoming = $request->input('our_work_content');
             if (is_array($incoming)) {
-                foreach (['hero_title_primary', 'hero_title_accent', 'hero_intro', 'hero_cta_label', 'hero_cta_url', 'stat_value', 'stat_caption'] as $field) {
+                foreach (['hero_title_primary', 'hero_title_accent', 'hero_intro', 'hero_cta_label', 'hero_cta_url', 'stat_value', 'stat_caption', 'cta_heading', 'cta_body', 'cta_call_label', 'cta_quote_label'] as $field) {
                     if (array_key_exists($field, $incoming)) {
                         $content->{$field} = $incoming[$field];
                     }
@@ -481,6 +490,10 @@ class PageController extends Controller
                 if (array_key_exists('hero_icon', $incoming)) {
                     $pick = $incoming['hero_icon'];
                     $content->hero_icon = (is_string($pick) && $pick !== '') ? $pick : null;
+                }
+                if (array_key_exists('cta_icon', $incoming)) {
+                    $pick = $incoming['cta_icon'];
+                    $content->cta_icon = (is_string($pick) && $pick !== '') ? $pick : null;
                 }
             }
 
@@ -524,6 +537,28 @@ class PageController extends Controller
                     self::OUR_WORK_HERO_INSET_PREFIX,
                     ['jpg', 'jpeg', 'png', 'gif', 'webp'],
                     'our_work_hero_inset_image',
+                    self::OUR_WORK_SECTION_IMAGES_DIR
+                );
+            }
+
+            if ($request->boolean('our_work_remove_cta_image')) {
+                $this->deleteAboutManagedUpload($content->cta_image_filename, self::OUR_WORK_CTA_IMAGE_PREFIX);
+                $content->cta_image_filename = null;
+            }
+
+            if ($request->hasFile('our_work_cta_image')) {
+                $file = $request->file('our_work_cta_image');
+                if (! $file instanceof UploadedFile || ! $file->isValid()) {
+                    throw ValidationException::withMessages([
+                        'our_work_cta_image' => ['No se pudo subir la imagen del banner CTA.'],
+                    ]);
+                }
+                $this->deleteAboutManagedUpload($content->cta_image_filename, self::OUR_WORK_CTA_IMAGE_PREFIX);
+                $content->cta_image_filename = $this->storeAboutUploadInPublicImages(
+                    $file,
+                    self::OUR_WORK_CTA_IMAGE_PREFIX,
+                    ['jpg', 'jpeg', 'png', 'gif', 'webp'],
+                    'our_work_cta_image',
                     self::OUR_WORK_SECTION_IMAGES_DIR
                 );
             }
