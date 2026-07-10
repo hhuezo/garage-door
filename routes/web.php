@@ -10,7 +10,6 @@ use App\Http\Controllers\PublicContactController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\PublicOurWorkController;
 use App\Http\Controllers\PublicServicesController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', WelcomeController::class);
@@ -29,23 +28,7 @@ Route::get('/reviews', function () {
     return view('reviews');
 })->name('reviews');
 
-Route::post('/contact', function (Request $request) {
-    $request->validate([
-        'name' => ['required', 'string', 'max:255'],
-        'phone' => ['nullable', 'string', 'max:40'],
-        'email' => ['required', 'email', 'max:255'],
-        'subject' => ['nullable', 'string', 'max:255'],
-        'message' => ['required', 'string', 'max:5000'],
-    ]);
-
-    $previous = url()->previous();
-    $redirectTo = ($previous === url('/') || str_ends_with($previous, '/#contacto'))
-        ? url('/#contacto')
-        : route('contact');
-
-    return redirect($redirectTo)
-        ->with('status', 'Thank you — we received your message and will get back to you soon.');
-})->name('contact.submit');
+Route::post('/contact', [PublicContactController::class, 'storeMessage'])->name('contact.submit');
 
 Auth::routes();
 

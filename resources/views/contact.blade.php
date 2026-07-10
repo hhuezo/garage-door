@@ -111,6 +111,12 @@
                 </div>
             @endif
 
+            @error('mail')
+                <div class="mb-5 rounded-xl border border-error/30 bg-error-container px-4 py-3 text-sm text-on-error-container" role="alert">
+                    {{ $message }}
+                </div>
+            @enderror
+
             @if (session('appointment_status'))
                 <div class="contact-flash mb-5" role="status">
                     {{ session('appointment_status') }}

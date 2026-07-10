@@ -115,4 +115,15 @@ return [
         'name' => env('MAIL_FROM_NAME', env('APP_NAME', 'Laravel')),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Admin Notification Recipient
+    |--------------------------------------------------------------------------
+    |
+    | Contact form and appointment notifications are sent to this address.
+    |
+    */
+
+    'admin_to' => env('MAIL_ADMIN_TO'),
+
 ];

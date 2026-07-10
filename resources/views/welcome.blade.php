@@ -245,6 +245,11 @@
                                 {{ session('status') }}
                             </div>
                         @endif
+                        @error('mail')
+                            <div class="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800" role="alert">
+                                {{ $message }}
+                            </div>
+                        @enderror
                         <form class="space-y-4" method="post" action="{{ route('contact.submit') }}">
                             @csrf
                             <div class="bg-white rounded-xl p-4 shadow-sm">
