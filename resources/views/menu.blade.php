@@ -175,6 +175,12 @@
                             </a>
                         </li>
                         <li class="slide">
+                            <a href="{{ route('mail.settings') }}" id="adminMailSettings" class="side-menu__item">
+                                <i class="ri-mail-settings-line side-menu__icon align-middle"></i>
+                                <span class="side-menu__label">Mail settings</span>
+                            </a>
+                        </li>
+                        <li class="slide">
                             <a href="{{ url('/') }}" target="_blank" rel="noopener" class="side-menu__item">
                                 <i class="ri-external-link-line side-menu__icon align-middle"></i>
                                 <span class="side-menu__label">Ver sitio público</span>

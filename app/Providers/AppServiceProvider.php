@@ -2,9 +2,12 @@
 
 namespace App\Providers;
 
+use App\Models\MailSetting;
 use App\Models\Page;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Throwable;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,6 +24,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $this->applyMailSettingsFromDatabase();
+
         View::composer('partials.social_follow_links', function ($view) {
             $content = Page::query()
                 ->where('slug', 'welcome')
@@ -34,5 +39,44 @@ class AppServiceProvider extends ServiceProvider
                 'tiktok' => $content?->social_tiktok_url ?? 'https://www.tiktok.com/@twinskbkce0?_r=1&_t=ZP-97DkpBKMzPi',
             ]);
         });
+    }
+
+    private function applyMailSettingsFromDatabase(): void
+    {
+        try {
+            if (! Schema::hasTable('mail_settings')) {
+                return;
+            }
+
+            $settings = MailSetting::current();
+
+            $overrides = [];
+
+            if (filled($settings->username)) {
+                $overrides['mail.mailers.smtp.username'] = $settings->username;
+            }
+
+            if (filled($settings->password)) {
+                $overrides['mail.mailers.smtp.password'] = $settings->password;
+            }
+
+            if (filled($settings->from_address)) {
+                $overrides['mail.from.address'] = $settings->from_address;
+            }
+
+            if (filled($settings->from_name)) {
+                $overrides['mail.from.name'] = $settings->from_name;
+            }
+
+            if (filled($settings->admin_to)) {
+                $overrides['mail.admin_to'] = $settings->admin_to;
+            }
+
+            if ($overrides !== []) {
+                config($overrides);
+            }
+        } catch (Throwable) {
+            // Table may not exist yet or DB may be unavailable; keep .env fallbacks.
+        }
     }
 }

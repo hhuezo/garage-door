@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AppointmentBookingController;
 use App\Http\Controllers\Admin\AppointmentSettingsController;
 use App\Http\Controllers\Admin\AppointmentSlotController;
+use App\Http\Controllers\Admin\MailSettingsController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PublicAboutUsController;
@@ -51,6 +52,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/appointments/slots/{slot}', [AppointmentSlotController::class, 'destroy'])->name('appointments.slots.destroy');
     Route::get('/appointments/bookings', [AppointmentBookingController::class, 'index'])->name('appointments.bookings.index');
     Route::patch('/appointments/bookings/{booking}/cancel', [AppointmentBookingController::class, 'cancel'])->name('appointments.bookings.cancel');
+
+    Route::get('/mail/settings', [MailSettingsController::class, 'index'])->name('mail.settings');
+    Route::post('/mail/settings', [MailSettingsController::class, 'update'])->name('mail.settings.update');
 });
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
