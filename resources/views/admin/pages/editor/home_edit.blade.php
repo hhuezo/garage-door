@@ -38,7 +38,7 @@
     @else
     <main>
         {{-- Hero --}}
-        <section class="home-edit-section relative min-h-[480px] sm:min-h-[540px] md:min-h-[600px] flex items-center overflow-hidden bg-primary py-12 sm:py-16">
+        <section class="home-edit-section relative min-h-[480px] sm:min-h-[540px] md:min-h-[600px] flex items-center overflow-hidden bg-primary py-12 sm:py-16 pb-24 sm:pb-28">
             <button type="button" class="btn btn-primary btn-sm shadow-sm cms-section-edit-btn" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-home-hero" aria-controls="offcanvas-home-hero">Editar hero</button>
             <div class="offcanvas offcanvas-end cms-page-offcanvas d-flex flex-column" tabindex="-1" id="offcanvas-home-hero" aria-labelledby="offcanvas-home-hero-label" data-bs-scroll="true">
                 <div class="offcanvas-header border-bottom flex-shrink-0">
@@ -51,7 +51,7 @@
                         <input type="text" class="form-control" id="home-hero-line1" form="{{ $formId }}" name="home_content[hero_title_line1]" value="{{ old('home_content.hero_title_line1', $homeContent->hero_title_line1) }}" maxlength="255">
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="home-hero-line2">Título — línea 2 (teléfono)</label>
+                        <label class="form-label" for="home-hero-line2">Teléfono (abajo del hero)</label>
                         <input type="text" class="form-control" id="home-hero-line2" form="{{ $formId }}" name="home_content[hero_title_line2]" value="{{ old('home_content.hero_title_line2', $homeContent->hero_title_line2) }}" maxlength="255">
                     </div>
                     <div class="form-group">
@@ -104,10 +104,10 @@
                 <img alt="" class="w-full h-full object-cover" src="{{ $heroBgSrc }}" />
                 <div class="absolute inset-0 hero-overlay"></div>
             </div>
-            <div class="relative z-10 max-w-screen-2xl mx-auto px-4 sm:px-6 w-full grid grid-cols-1 md:grid-cols-2 items-center gap-8 md:gap-12">
+            <div class="relative z-10 max-w-screen-2xl mx-auto px-4 sm:px-6 w-full grid grid-cols-1 md:grid-cols-2 items-center gap-8 md:gap-12" style="background-color: rgba(0, 0, 0, 0.5) !important;">
                 <div class="relative">
                     <h1 class="font-headline font-black text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-white leading-tight mb-6 sm:mb-8">
-                        {{ $homeContent->hero_title_line1 }} <br /> {{ $homeContent->hero_title_line2 }} <br>
+                        {{ $homeContent->hero_title_line1 }} <br>
                         <span class="text-on-primary-container">{{ $homeContent->hero_title_accent }}</span>
                     </h1>
                     <p class="text-base sm:text-lg text-slate-200 font-light mb-8 sm:mb-10 max-w-lg whitespace-pre-wrap">{{ $homeContent->hero_lead }}</p>
@@ -121,6 +121,11 @@
                         <img alt="" class="w-full h-full object-cover rounded-2xl" src="{{ $heroInsetSrc }}" />
                     </div>
                 </div>
+            @if ($homeContent->hero_title_line2)
+                <span class="absolute z-20 bottom-5 sm:bottom-6 left-1/2 md:left-[58%] lg:left-[55%] -translate-x-1/2 font-headline font-black text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-white leading-none tracking-tight drop-shadow-lg pointer-events-none">
+                    {{ $homeContent->hero_title_line2 }}
+                </span>
+            @endif
             </div>
         </section>
 
@@ -369,6 +374,19 @@
                     <div class="form-group">
                         <label class="form-label" for="home-map-url">URL embed del mapa (iframe)</label>
                         <textarea class="form-control" id="home-map-url" rows="3" form="{{ $formId }}" name="home_content[map_embed_url]">{{ old('home_content.map_embed_url', $homeContent->map_embed_url) }}</textarea>
+                    </div>
+                    <h6 class="text-muted text-uppercase small mb-3 mt-2">Redes sociales</h6>
+                    <div class="form-group">
+                        <label class="form-label" for="home-social-instagram">Instagram (URL)</label>
+                        <input type="text" class="form-control" id="home-social-instagram" form="{{ $formId }}" name="home_content[social_instagram_url]" value="{{ old('home_content.social_instagram_url', $homeContent->social_instagram_url) }}" maxlength="512" placeholder="https://www.instagram.com/...">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="home-social-facebook">Facebook (URL)</label>
+                        <input type="text" class="form-control" id="home-social-facebook" form="{{ $formId }}" name="home_content[social_facebook_url]" value="{{ old('home_content.social_facebook_url', $homeContent->social_facebook_url) }}" maxlength="512" placeholder="https://www.facebook.com/...">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="home-social-tiktok">TikTok (URL)</label>
+                        <input type="text" class="form-control" id="home-social-tiktok" form="{{ $formId }}" name="home_content[social_tiktok_url]" value="{{ old('home_content.social_tiktok_url', $homeContent->social_tiktok_url) }}" maxlength="512" placeholder="https://www.tiktok.com/@...">
                     </div>
                 </div>
                 <div class="offcanvas-footer border-top bg-light p-3 flex-shrink-0 d-flex justify-content-end">

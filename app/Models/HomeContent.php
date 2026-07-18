@@ -37,6 +37,9 @@ class HomeContent extends Model
         'contact_phone',
         'contact_email',
         'map_embed_url',
+        'social_instagram_url',
+        'social_facebook_url',
+        'social_tiktok_url',
     ];
 
     public function page(): BelongsTo

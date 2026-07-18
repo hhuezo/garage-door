@@ -669,6 +669,9 @@ class PageController extends Controller
             'home_content.contact_phone' => ['sometimes', 'nullable', 'string', 'max:64'],
             'home_content.contact_email' => ['sometimes', 'nullable', 'string', 'max:255'],
             'home_content.map_embed_url' => ['sometimes', 'nullable', 'string', 'max:2048'],
+            'home_content.social_instagram_url' => ['sometimes', 'nullable', 'string', 'max:512'],
+            'home_content.social_facebook_url' => ['sometimes', 'nullable', 'string', 'max:512'],
+            'home_content.social_tiktok_url' => ['sometimes', 'nullable', 'string', 'max:512'],
             'home_hero_bg_image' => ['nullable', 'image', 'max:8192'],
             'home_hero_inset_image' => ['nullable', 'image', 'max:8192'],
             'home_work_main_image' => ['nullable', 'image', 'max:8192'],
@@ -706,6 +709,7 @@ class PageController extends Controller
                     'work_heading_primary', 'work_heading_accent', 'work_intro', 'work_cta_label',
                     'reviews_heading_primary', 'reviews_heading_accent', 'reviews_cta_label',
                     'contact_heading', 'contact_phone', 'contact_email', 'map_embed_url',
+                    'social_instagram_url', 'social_facebook_url', 'social_tiktok_url',
                 ] as $field) {
                     if (array_key_exists($field, $incoming)) {
                         $content->{$field} = $incoming[$field];

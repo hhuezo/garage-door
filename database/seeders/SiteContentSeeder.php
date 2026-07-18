@@ -69,7 +69,7 @@ class SiteContentSeeder extends Seeder
             'hero_title_accent' => 'Work',
             'hero_icon' => 'tune',
             'hero_intro' => 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat.',
-            'hero_cta_label' => 'Leer más',
+            'hero_cta_label' => 'Read more',
             'hero_cta_url' => '/#contacto',
             'hero_main_image_filename' => 'lifting-gates-garage.jpg',
             'hero_inset_image_filename' => 'service2.jpg',
@@ -114,6 +114,9 @@ class SiteContentSeeder extends Seeder
             'contact_phone' => '469-288-8881',
             'contact_email' => 'twinsgaragedoors@gmail.com',
             'map_embed_url' => 'https://maps.google.com/maps?q=Dallas-Fort%20Worth%2C%20TX&t=&z=9&ie=UTF8&iwloc=&output=embed',
+            'social_instagram_url' => 'https://www.instagram.com/TwinsGarageDoors/',
+            'social_facebook_url' => 'https://www.facebook.com/thegaragedoorsR/',
+            'social_tiktok_url' => 'https://www.tiktok.com/@twinskbkce0?_r=1&_t=ZP-97DkpBKMzPi',
         ]);
 
         $this->homeStat($homeContent, 0, '10+', 'Years of experience');
