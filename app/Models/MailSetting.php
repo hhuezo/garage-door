@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class MailSetting extends Model
 {
     protected $fillable = [
+        'mailer',
+        'host',
+        'port',
+        'scheme',
         'username',
         'password',
         'from_address',
@@ -14,11 +18,22 @@ class MailSetting extends Model
         'admin_to',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'port' => 'integer',
+        ];
+    }
+
     public static function current(): self
     {
         return static::query()->firstOrCreate(
             ['id' => 1],
             [
+                'mailer' => config('mail.default'),
+                'host' => config('mail.mailers.smtp.host'),
+                'port' => config('mail.mailers.smtp.port'),
+                'scheme' => config('mail.mailers.smtp.scheme'),
                 'username' => config('mail.mailers.smtp.username'),
                 'password' => config('mail.mailers.smtp.password'),
                 'from_address' => config('mail.from.address'),

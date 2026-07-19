@@ -52,6 +52,22 @@ class AppServiceProvider extends ServiceProvider
 
             $overrides = [];
 
+            if (filled($settings->mailer)) {
+                $overrides['mail.default'] = $settings->mailer;
+            }
+
+            if (filled($settings->host)) {
+                $overrides['mail.mailers.smtp.host'] = $settings->host;
+            }
+
+            if (filled($settings->port)) {
+                $overrides['mail.mailers.smtp.port'] = $settings->port;
+            }
+
+            if (filled($settings->scheme)) {
+                $overrides['mail.mailers.smtp.scheme'] = $settings->scheme;
+            }
+
             if (filled($settings->username)) {
                 $overrides['mail.mailers.smtp.username'] = $settings->username;
             }

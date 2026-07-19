@@ -42,6 +42,32 @@
                     <form method="post" action="{{ route('mail.settings.update') }}">
                         @csrf
                         <div class="mb-3">
+                            <label class="form-label" for="mailer">Mailer</label>
+                            <select class="form-select" id="mailer" name="mailer">
+                                <option value="smtp" @selected(old('mailer', $settings->mailer) === 'smtp')>smtp</option>
+                                <option value="log" @selected(old('mailer', $settings->mailer) === 'log')>log</option>
+                            </select>
+                            <span class="form-text text-muted">"log" writes emails to the application log instead of sending them.</span>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="host">SMTP host</label>
+                            <input type="text" class="form-control" id="host" name="host"
+                                value="{{ old('host', $settings->host) }}" placeholder="smtp.gmail.com">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="port">SMTP port</label>
+                            <input type="number" class="form-control" id="port" name="port"
+                                value="{{ old('port', $settings->port) }}" min="1" max="65535" placeholder="587">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="scheme">Scheme</label>
+                            <select class="form-select" id="scheme" name="scheme">
+                                <option value="" @selected(old('scheme', $settings->scheme) === null || old('scheme', $settings->scheme) === '')>Default</option>
+                                <option value="tls" @selected(old('scheme', $settings->scheme) === 'tls')>tls</option>
+                                <option value="smtps" @selected(old('scheme', $settings->scheme) === 'smtps')>smtps</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
                             <label class="form-label" for="username">SMTP username</label>
                             <input type="text" class="form-control" id="username" name="username"
                                 value="{{ old('username', $settings->username) }}" autocomplete="username">

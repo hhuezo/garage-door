@@ -1,0 +1,30 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::table('mail_settings', function (Blueprint $table) {
+            $table->string('mailer')->nullable()->after('id');
+            $table->string('host')->nullable()->after('mailer');
+            $table->unsignedInteger('port')->nullable()->after('host');
+            $table->string('scheme')->nullable()->after('port');
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::table('mail_settings', function (Blueprint $table) {
+            $table->dropColumn([
+                'mailer',
+                'host',
+                'port',
+                'scheme',
+            ]);
+        });
+    }
+};
